@@ -1,0 +1,996 @@
+/* ==========================================================================
+   VitalGrid - Crew Dragon Aerospace Glass Cockpit Design System
+   NASA Space Apps Challenge - Deep Space Medical Telemetry Dashboard
+   ========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;600;700&family=Rajdhani:wght@500;600;700&family=Space+Grotesk:wght@400;600;700&display=swap');
+
+:root {
+  --bg-space: #06090e;
+  --bg-cockpit: #0b111a;
+  --surface-glass: rgba(14, 23, 38, 0.75);
+  --surface-glass-border: rgba(0, 243, 255, 0.18);
+  --surface-glass-hover: rgba(20, 34, 56, 0.85);
+
+  --hud-cyan: #00f3ff;
+  --hud-cyan-dim: rgba(0, 243, 255, 0.25);
+  --hud-cyan-glow: 0 0 20px rgba(0, 243, 255, 0.45);
+
+  --bio-green: #00ff9d;
+  --bio-green-glow: 0 0 16px rgba(0, 255, 157, 0.45);
+
+  --warn-amber: #ffb703;
+  --warn-amber-glow: 0 0 18px rgba(255, 183, 3, 0.5);
+
+  --crit-crimson: #ff0055;
+  --crit-crimson-glow: 0 0 24px rgba(255, 0, 85, 0.7);
+
+  --text-primary: #e6f1ff;
+  --text-secondary: #88a2b8;
+  --text-muted: #4e657c;
+
+  --font-display: 'Rajdhani', -apple-system, sans-serif;
+  --font-tech: 'Space Grotesk', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+
+  --radius-hud: 12px;
+  --radius-sm: 6px;
+  --transition-fast: 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: var(--bg-space);
+  color: var(--text-primary);
+  font-family: var(--font-tech);
+  min-height: 100vh;
+  overflow-x: hidden;
+  position: relative;
+  background-image: 
+    radial-gradient(circle at 50% 10%, rgba(0, 243, 255, 0.05) 0%, transparent 60%),
+    radial-gradient(circle at 90% 80%, rgba(255, 0, 85, 0.03) 0%, transparent 50%),
+    linear-gradient(rgba(0, 243, 255, 0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 243, 255, 0.02) 1px, transparent 1px);
+  background-size: 100% 100%, 100% 100%, 32px 32px, 32px 32px;
+}
+
+/* Scanline / Aerospace HUD Overlay */
+body::before {
+  content: " ";
+  display: block;
+  position: fixed;
+  top: 0; left: 0; bottom: 0; right: 0;
+  background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%);
+  background-size: 100% 4px;
+  z-index: 999;
+  pointer-events: none;
+  opacity: 0.35;
+}
+
+/* App Header */
+.cockpit-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 28px;
+  background: rgba(8, 13, 21, 0.85);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--surface-glass-border);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.brand-section {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.nasa-logo-badge {
+  background: linear-gradient(135deg, #0b3d91, #1a56c4);
+  color: #fff;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.95rem;
+  padding: 4px 10px;
+  border-radius: var(--radius-sm);
+  letter-spacing: 2px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 0 10px rgba(26, 86, 196, 0.5);
+}
+
+.project-title {
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  letter-spacing: 2px;
+  font-weight: 700;
+  color: #fff;
+  text-transform: uppercase;
+}
+
+.project-title span {
+  color: var(--hud-cyan);
+  text-shadow: var(--hud-cyan-glow);
+}
+
+.mission-tag {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--text-secondary);
+  background: rgba(0, 243, 255, 0.08);
+  padding: 2px 8px;
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(0, 243, 255, 0.2);
+}
+
+.mission-clock-section {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.clock-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.clock-label {
+  font-family: var(--font-display);
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  letter-spacing: 1.5px;
+}
+
+.clock-val {
+  font-family: var(--font-mono);
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--hud-cyan);
+}
+
+.header-status-pills {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.status-pill {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 600;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: var(--transition-fast);
+}
+
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--text-muted);
+}
+
+.status-pill.connected .status-dot {
+  background: var(--bio-green);
+  box-shadow: var(--bio-green-glow);
+  animation: pulse-dot 2s infinite;
+}
+
+.status-pill.disconnected .status-dot {
+  background: var(--crit-crimson);
+  box-shadow: var(--crit-crimson-glow);
+}
+
+.status-pill.soma-standby .status-dot {
+  background: var(--hud-cyan);
+  box-shadow: var(--hud-cyan-glow);
+}
+
+.status-pill.soma-active {
+  background: rgba(255, 0, 85, 0.15);
+  border-color: var(--crit-crimson);
+  color: var(--crit-crimson);
+  animation: flash-border 1s infinite alternate;
+}
+
+.status-pill.soma-active .status-dot {
+  background: var(--crit-crimson);
+  box-shadow: var(--crit-crimson-glow);
+}
+
+.btn-icon-hud {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--surface-glass-border);
+  color: var(--text-primary);
+  padding: 7px 12px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-family: var(--font-display);
+  font-size: 0.85rem;
+  letter-spacing: 1px;
+  transition: var(--transition-fast);
+}
+
+.btn-icon-hud:hover {
+  background: var(--hud-cyan-dim);
+  border-color: var(--hud-cyan);
+  color: #fff;
+}
+
+/* SOMA Active Emergency Alert Banner */
+.soma-emergency-strip {
+  display: none;
+  background: linear-gradient(90deg, rgba(255, 0, 85, 0.25), rgba(15, 5, 10, 0.95), rgba(255, 0, 85, 0.25));
+  border-bottom: 2px solid var(--crit-crimson);
+  padding: 12px 28px;
+  position: relative;
+  overflow: hidden;
+  animation: alert-slide-down 0.4s ease-out;
+}
+
+.soma-emergency-strip.visible {
+  display: block;
+}
+
+.soma-strip-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.soma-title-box {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.soma-pulse-beacon {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--crit-crimson);
+  box-shadow: var(--crit-crimson-glow);
+  animation: pulse-beacon 0.8s infinite;
+}
+
+.soma-banner-h1 {
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  color: #fff;
+  text-transform: uppercase;
+}
+
+.soma-banner-desc {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: #ff99bb;
+}
+
+.dsoc-laser-link-box {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+}
+
+.dsoc-badge {
+  background: rgba(0, 243, 255, 0.15);
+  border: 1px solid var(--hud-cyan);
+  color: var(--hud-cyan);
+  padding: 4px 10px;
+  border-radius: var(--radius-sm);
+  font-weight: 600;
+}
+
+/* Cockpit Grid Layout (Crew Dragon 3-Column Glass Layout) */
+.cockpit-container {
+  display: grid;
+  grid-template-columns: 320px 1fr 380px;
+  gap: 20px;
+  padding: 24px 28px;
+  max-width: 1920px;
+  margin: 0 auto;
+}
+
+@media (max-width: 1400px) {
+  .cockpit-container {
+    grid-template-columns: 300px 1fr;
+  }
+  .cockpit-col.right-col {
+    grid-column: span 2;
+  }
+}
+
+@media (max-width: 1024px) {
+  .cockpit-container {
+    grid-template-columns: 1fr;
+  }
+  .cockpit-col.right-col {
+    grid-column: span 1;
+  }
+}
+
+.cockpit-col {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Glass Panels */
+.glass-panel {
+  background: var(--surface-glass);
+  backdrop-filter: blur(16px);
+  border: 1px solid var(--surface-glass-border);
+  border-radius: var(--radius-hud);
+  padding: 18px 20px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+  transition: var(--transition-fast);
+}
+
+.glass-panel::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; width: 40px; height: 2px;
+  background: var(--hud-cyan);
+  box-shadow: var(--hud-cyan-glow);
+}
+
+.glass-panel:hover {
+  border-color: rgba(0, 243, 255, 0.35);
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.5);
+}
+
+.panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 14px;
+}
+
+.panel-title {
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--hud-cyan);
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.panel-badge {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  color: var(--text-secondary);
+  background: rgba(255, 255, 255, 0.05);
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+/* Crew Card */
+.crew-profile-box {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 16px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.crew-avatar-hexagon {
+  width: 54px;
+  height: 54px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #10223b, #004b6b);
+  border: 2px solid var(--hud-cyan);
+  box-shadow: var(--hud-cyan-glow);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+.crew-meta h2 {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  color: #fff;
+  letter-spacing: 1px;
+}
+
+.crew-meta p {
+  font-family: var(--font-mono);
+  font-size: 0.76rem;
+  color: var(--text-secondary);
+}
+
+/* Health Score Ring Gauge */
+.health-score-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 0 16px;
+}
+
+.gauge-svg-wrap {
+  position: relative;
+  width: 170px;
+  height: 170px;
+}
+
+.gauge-svg {
+  transform: rotate(-90deg);
+  width: 100%;
+  height: 100%;
+}
+
+.gauge-track {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.08);
+  stroke-width: 12;
+}
+
+.gauge-progress {
+  fill: none;
+  stroke: var(--bio-green);
+  stroke-width: 12;
+  stroke-linecap: round;
+  stroke-dasharray: 440;
+  stroke-dashoffset: 44;
+  transition: stroke-dashoffset 0.6s ease, stroke 0.6s ease;
+  filter: drop-shadow(0 0 8px rgba(0, 255, 157, 0.6));
+}
+
+.gauge-center-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+}
+
+.score-num {
+  font-family: var(--font-display);
+  font-size: 2.8rem;
+  font-weight: 700;
+  color: #fff;
+  line-height: 1;
+}
+
+.score-sub {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  color: var(--text-secondary);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+/* Survival Triad */
+.survival-triad {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+}
+
+.survival-pill {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 14px;
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  transition: var(--transition-fast);
+}
+
+.survival-pill.nominal {
+  border-left: 3px solid var(--bio-green);
+}
+
+.survival-pill.danger {
+  border-left: 3px solid var(--crit-crimson);
+  background: rgba(255, 0, 85, 0.12);
+  color: #fff;
+  animation: pulse-danger-box 1.2s infinite;
+}
+
+.survival-pill .tag {
+  font-weight: 700;
+  font-size: 0.72rem;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.survival-pill.nominal .tag {
+  background: rgba(0, 255, 157, 0.15);
+  color: var(--bio-green);
+}
+
+.survival-pill.danger .tag {
+  background: var(--crit-crimson);
+  color: #fff;
+}
+
+/* ECG Live Canvas */
+.ecg-container {
+  position: relative;
+  background: #04070b;
+  border: 1px solid rgba(0, 243, 255, 0.2);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  height: 110px;
+}
+
+#ecgCanvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.ecg-overlay-stats {
+  position: absolute;
+  top: 8px;
+  right: 10px;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--hud-cyan);
+  background: rgba(0, 0, 0, 0.6);
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+/* RIDGE Pillars Matrix (Center Column) */
+.ridge-matrix {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+
+@media (max-width: 900px) {
+  .ridge-matrix {
+    grid-template-columns: 1fr;
+  }
+}
+
+.pillar-card {
+  background: rgba(11, 18, 30, 0.7);
+  border: 1px solid rgba(0, 243, 255, 0.15);
+  border-radius: var(--radius-hud);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  position: relative;
+  transition: var(--transition-fast);
+}
+
+.pillar-card:hover {
+  border-color: rgba(0, 243, 255, 0.4);
+  background: rgba(14, 24, 40, 0.85);
+}
+
+.pillar-card.full-width {
+  grid-column: span 2;
+}
+
+@media (max-width: 900px) {
+  .pillar-card.full-width {
+    grid-column: span 1;
+  }
+}
+
+.pillar-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  padding-bottom: 8px;
+}
+
+.pillar-badge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+.pillar-letter {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  background: rgba(0, 243, 255, 0.15);
+  border: 1px solid var(--hud-cyan);
+  border-radius: 4px;
+  color: var(--hud-cyan);
+  font-size: 0.8rem;
+}
+
+.pillar-metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 10px;
+}
+
+.metric-cell {
+  background: rgba(4, 8, 14, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: var(--radius-sm);
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  transition: var(--transition-fast);
+}
+
+.metric-cell:hover {
+  border-color: rgba(0, 243, 255, 0.3);
+}
+
+.metric-cell.critical-breach {
+  border-color: var(--crit-crimson);
+  background: rgba(255, 0, 85, 0.12);
+  animation: pulse-danger-box 1.2s infinite;
+}
+
+.metric-cell.warning-breach {
+  border-color: var(--warn-amber);
+  background: rgba(255, 183, 3, 0.12);
+}
+
+.metric-name {
+  font-family: var(--font-tech);
+  font-size: 0.7rem;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+
+.metric-value-row {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+}
+
+.metric-value {
+  font-family: var(--font-mono);
+  font-size: 1.28rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+.metric-unit {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--text-muted);
+}
+
+.metric-threshold-tag {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+
+/* Progress bar for dose/limits */
+.progress-bar-wrap {
+  width: 100%;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 3px;
+  margin-top: 6px;
+  overflow: hidden;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background: var(--bio-green);
+  border-radius: 3px;
+  transition: width 0.4s ease, background 0.4s ease;
+}
+
+.progress-bar-fill.warn {
+  background: var(--warn-amber);
+}
+
+.progress-bar-fill.crit {
+  background: var(--crit-crimson);
+}
+
+/* Flight Surgeon AI Directives Column (Right Column) */
+.directives-container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-height: 480px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.directive-card {
+  background: rgba(14, 21, 33, 0.85);
+  border-radius: var(--radius-sm);
+  border-left: 4px solid var(--bio-green);
+  padding: 14px;
+  position: relative;
+  transition: var(--transition-fast);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+
+.directive-card.CRITICAL {
+  border-left-color: var(--crit-crimson);
+  background: rgba(30, 8, 16, 0.85);
+  border: 1px solid rgba(255, 0, 85, 0.3);
+  border-left-width: 4px;
+  border-left-color: var(--crit-crimson);
+}
+
+.directive-card.WARNING {
+  border-left-color: var(--warn-amber);
+  background: rgba(28, 20, 8, 0.85);
+  border: 1px solid rgba(255, 183, 3, 0.3);
+  border-left-width: 4px;
+  border-left-color: var(--warn-amber);
+}
+
+.directive-card.NOMINAL {
+  border-left-color: var(--bio-green);
+}
+
+.directive-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.directive-status-tag {
+  font-family: var(--font-display);
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  padding: 2px 6px;
+  border-radius: 3px;
+}
+
+.directive-card.CRITICAL .directive-status-tag {
+  background: var(--crit-crimson);
+  color: #fff;
+  box-shadow: var(--crit-crimson-glow);
+}
+
+.directive-card.WARNING .directive-status-tag {
+  background: var(--warn-amber);
+  color: #000;
+}
+
+.directive-card.NOMINAL .directive-status-tag {
+  background: rgba(0, 255, 157, 0.2);
+  color: var(--bio-green);
+}
+
+.directive-time {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  color: var(--text-muted);
+}
+
+.directive-diagnosis {
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  color: #fff;
+  margin-bottom: 6px;
+}
+
+.directive-trigger {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--hud-cyan);
+  margin-bottom: 8px;
+}
+
+.directive-action-box {
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px dashed rgba(255, 255, 255, 0.15);
+  border-radius: 4px;
+  padding: 8px 10px;
+  font-family: var(--font-tech);
+  font-size: 0.78rem;
+  line-height: 1.4;
+  color: #e0ecf7;
+}
+
+.directive-action-label {
+  font-family: var(--font-display);
+  font-size: 0.72rem;
+  letter-spacing: 1px;
+  color: var(--warn-amber);
+  font-weight: 700;
+  text-transform: uppercase;
+  margin-bottom: 2px;
+}
+
+/* Simulation Controls / Test Flight Panel */
+.sim-controls-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+}
+
+.sim-btn {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: var(--text-primary);
+  padding: 8px 10px;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-display);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  text-align: center;
+  transition: var(--transition-fast);
+}
+
+.sim-btn:hover {
+  background: rgba(0, 243, 255, 0.15);
+  border-color: var(--hud-cyan);
+  color: #fff;
+}
+
+.sim-btn.danger-btn {
+  background: rgba(255, 0, 85, 0.1);
+  border-color: rgba(255, 0, 85, 0.3);
+}
+
+.sim-btn.danger-btn:hover {
+  background: var(--crit-crimson);
+  color: #fff;
+  box-shadow: var(--crit-crimson-glow);
+}
+
+.sim-btn.reset-btn {
+  grid-column: span 2;
+  background: rgba(0, 255, 157, 0.1);
+  border-color: rgba(0, 255, 157, 0.3);
+  color: var(--bio-green);
+}
+
+.sim-btn.reset-btn:hover {
+  background: var(--bio-green);
+  color: #000;
+  box-shadow: var(--bio-green-glow);
+}
+
+/* Raw Telemetry Inspector */
+.raw-json-viewer {
+  background: #04070a;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-sm);
+  padding: 10px;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  color: #92b0c9;
+  max-height: 180px;
+  overflow-y: auto;
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+
+/* SOMA Forensic Card Details */
+.soma-details-card {
+  display: none;
+  background: rgba(20, 5, 12, 0.9);
+  border: 1px solid var(--crit-crimson);
+  border-radius: var(--radius-hud);
+  padding: 16px;
+  margin-top: 8px;
+}
+
+.soma-details-card.visible {
+  display: block;
+  animation: alert-slide-down 0.3s ease-out;
+}
+
+.soma-kv-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+  margin-top: 10px;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+}
+
+.soma-kv-item {
+  background: rgba(0, 0, 0, 0.5);
+  padding: 6px 8px;
+  border-radius: 4px;
+}
+
+.soma-k {
+  color: var(--text-muted);
+  font-size: 0.65rem;
+}
+
+.soma-v {
+  color: #fff;
+  font-weight: 600;
+}
+
+/* Animations */
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(0.85); }
+}
+
+@keyframes pulse-beacon {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.3; transform: scale(1.3); }
+}
+
+@keyframes flash-border {
+  from { border-color: rgba(255, 0, 85, 0.3); }
+  to { border-color: var(--crit-crimson); }
+}
+
+@keyframes alert-slide-down {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pulse-danger-box {
+  0%, 100% { box-shadow: 0 0 0 rgba(255, 0, 85, 0); }
+  50% { box-shadow: 0 0 16px rgba(255, 0, 85, 0.4); }
+}
+
+/* Custom Scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.4);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(0, 243, 255, 0.2);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--hud-cyan);
+}

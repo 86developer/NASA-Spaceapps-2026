@@ -1,0 +1,66 @@
+# ==============================================================================
+# VitalGrid - Aerospace C++ & Web Git Ignore Rules
+# ==============================================================================
+
+# Executables & Binaries
+*.exe
+*.out
+*.app
+vitalgrid_daemon
+vitalgrid_daemon.exe
+
+# Compiled Object Files & Static/Dynamic Libraries
+*.o
+*.obj
+*.a
+*.lib
+*.so
+*.dll
+*.dylib
+
+# CMake Build Directories & Cache
+build/
+bin/
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+Makefile.cmake
+*.ninja
+*.ninja_deps
+*.ninja_log
+install_manifest.txt
+CTestTestfile.cmake
+
+# Visual Studio / MSVC / Clang
+.vs/
+*.sln
+*.vcxproj*
+*.user
+*.suo
+x64/
+x86/
+Debug/
+Release/
+
+# IDE & Editor Configurations
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Python Cache & Testing Virtual Environments
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+env/
+venv/
+
+# Operating System Files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Logs & Diagnostics
+*.log
