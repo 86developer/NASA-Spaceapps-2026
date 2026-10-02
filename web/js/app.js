@@ -1,10 +1,10 @@
 /**
- * VitalGrid - Crew Dragon Aerospace HUD & Telemetry Controller
- * NASA Space Apps Challenge - Deep Space Astronaut Health Monitoring
+ * VitalGrid - Controlador de Telemetría y Cockpit Aeroespacial Crew Dragon
+ * NASA Space Apps Challenge - Monitoreo de Salud de Astronautas en Espacio Profundo
  */
 
 document.addEventListener('DOMContentLoaded', () => {
-    // --- State Variables ---
+    // --- Variables de Estado ---
     let ws = null;
     let wsUrl = 'ws://127.0.0.1:9002';
     let reconnectTimer = null;
@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentPayload = null;
     let somaTriggered = false;
 
-    // --- DOM Elements ---
+    // --- Elementos del DOM ---
     const connectionPill = document.getElementById('connectionPill');
     const connectionLabel = document.getElementById('connectionLabel');
     const somaPill = document.getElementById('somaPill');
@@ -25,7 +25,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const rawJsonViewer = document.getElementById('rawJsonViewer');
     const directivesList = document.getElementById('directivesList');
 
-    // Health & Survival
+    // Salud y Supervivencia
     const healthScoreNum = document.getElementById('healthScoreNum');
     const healthGaugeProgress = document.getElementById('healthGaugeProgress');
     const crewIdEl = document.getElementById('crewId');
@@ -38,18 +38,18 @@ document.addEventListener('DOMContentLoaded', () => {
     const ecgCtx = ecgCanvas.getContext('2d');
     const ecgBpmDisplay = document.getElementById('ecgBpmDisplay');
 
-    // --- Audio Init on user click ---
+    // --- Inicialización de Audio al hacer clic ---
     document.body.addEventListener('click', () => {
         window.aerospaceAudio.init();
     }, { once: true });
 
     muteBtn.addEventListener('click', () => {
         const isMuted = window.aerospaceAudio.toggleMute();
-        muteBtn.textContent = isMuted ? 'UNMUTE AUDIO' : 'MUTE AUDIO';
+        muteBtn.textContent = isMuted ? 'ACTIVAR AUDIO' : 'SILENCIAR AUDIO';
         muteBtn.style.color = isMuted ? 'var(--text-muted)' : 'var(--hud-cyan)';
     });
 
-    // --- Mission Elapsed Time (MET) Clock ---
+    // --- Reloj de Tiempo Transcurrido de Misión (MET) ---
     let metSeconds = 42 * 86400 + 18 * 3600 + 24 * 60 + 12;
     setInterval(() => {
         metSeconds++;
@@ -61,7 +61,7 @@ document.addEventListener('DOMContentLoaded', () => {
         utcClock.textContent = new Date().toISOString().substring(11, 19) + ' UTC';
     }, 1000);
 
-    // --- Real-time ECG Canvas Generator ---
+    // --- Generador en Tiempo Real de ECG en Canvas ---
     let ecgPoints = [];
     let ecgX = 0;
     let currentBpm = 105;
@@ -84,7 +84,7 @@ document.addEventListener('DOMContentLoaded', () => {
         ecgCtx.fillStyle = 'rgba(4, 7, 11, 0.2)';
         ecgCtx.fillRect(0, 0, w, h);
 
-        // Draw grid
+        // Cuadrícula de derivación
         ecgCtx.strokeStyle = 'rgba(0, 243, 255, 0.05)';
         ecgCtx.lineWidth = 1;
         for (let gx = 0; gx < w; gx += 20) {
@@ -100,29 +100,29 @@ document.addEventListener('DOMContentLoaded', () => {
             ecgCtx.stroke();
         }
 
-        // Generate next ECG point
+        // Generar siguiente muestra ECG
         let sample = 0;
         if (!isVitalsPresent) {
-            // Asystole flatline with subtle sensor noise
+            // Asistolia: línea plana con ruido sensor de baja amplitud
             sample = (Math.random() - 0.5) * 1.5;
         } else {
             const beatPeriod = Math.max(30, Math.floor(3600 / currentBpm));
             const phase = ecgX % beatPeriod;
 
             if (phase >= 10 && phase < 14) {
-                // P wave
+                // Onda P
                 sample = Math.sin((phase - 10) / 4 * Math.PI) * 7;
             } else if (phase === 20) {
-                // Q drop
+                // Caída Q
                 sample = -10;
             } else if (phase === 22) {
-                // R peak spike
+                // Pico R (deflexión rápida)
                 sample = 42;
             } else if (phase === 24) {
-                // S drop
+                // Caída S
                 sample = -16;
             } else if (phase >= 32 && phase < 42) {
-                // T wave
+                // Onda T
                 sample = Math.sin((phase - 32) / 10 * Math.PI) * 12;
             } else {
                 sample = (Math.random() - 0.5) * 2;
@@ -135,7 +135,7 @@ document.addEventListener('DOMContentLoaded', () => {
             ecgPoints.shift();
         }
 
-        // Draw trace
+        // Trazo del haz
         ecgCtx.beginPath();
         ecgCtx.strokeStyle = isVitalsPresent ? '#00f3ff' : '#ff0055';
         ecgCtx.lineWidth = 2;
@@ -154,7 +154,7 @@ document.addEventListener('DOMContentLoaded', () => {
         ecgCtx.stroke();
         ecgCtx.shadowBlur = 0;
 
-        // Clear beam head
+        // Limpieza de cabeza de barrido
         ecgCtx.clearRect((currentPos + 1) % w, 0, 16, h);
 
         ecgX++;
@@ -162,10 +162,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     requestAnimationFrame(drawECG);
 
-    // --- WebSocket Client Implementation ---
+    // --- Cliente WebSocket ---
     function connectWebSocket() {
-        console.log(`[VitalGrid UI] Connecting to ${wsUrl}...`);
-        connectionLabel.textContent = 'CONNECTING...';
+        console.log(`[VitalGrid UI] Conectando a ${wsUrl}...`);
+        connectionLabel.textContent = 'CONECTANDO...';
         connectionPill.className = 'status-pill disconnected';
 
         try {
@@ -177,8 +177,8 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         ws.onopen = () => {
-            console.log('[VitalGrid UI] Connected to Flight Surgeon C++ Daemon');
-            connectionLabel.textContent = 'TELEMETRY ONLINE';
+            console.log('[VitalGrid UI] Conectado con el Demonio C++ del IA Médico de Vuelo');
+            connectionLabel.textContent = 'TELEMETRÍA EN LÍNEA';
             connectionPill.className = 'status-pill connected';
             if (reconnectTimer) clearTimeout(reconnectTimer);
         };
@@ -188,19 +188,19 @@ document.addEventListener('DOMContentLoaded', () => {
                 const data = JSON.parse(event.data);
                 handleIncomingMessage(data, event.data);
             } catch (err) {
-                console.error('[JSON PARSE ERROR]', err, event.data);
+                console.error('[ERROR PARSEANDO JSON]', err, event.data);
             }
         };
 
         ws.onclose = () => {
-            console.warn('[VitalGrid UI] Connection closed');
-            connectionLabel.textContent = 'DISCONNECTED (RETRYING)';
+            console.warn('[VitalGrid UI] Conexión cerrada');
+            connectionLabel.textContent = 'DESCONECTADO (REINTENTANDO)';
             connectionPill.className = 'status-pill disconnected';
             scheduleReconnect();
         };
 
         ws.onerror = (err) => {
-            console.error('[WS SOCKET ERROR]', err);
+            console.error('[ERROR DE SOCKET WS]', err);
             ws.close();
         };
     }
@@ -210,7 +210,7 @@ document.addEventListener('DOMContentLoaded', () => {
         reconnectTimer = setTimeout(connectWebSocket, 2000);
     }
 
-    // --- Message Dispatcher ---
+    // --- Despachador de Mensajes ---
     function handleIncomingMessage(msg, rawString) {
         if (msg.type === 'SOMA_DSOC_EVENT') {
             handleSomaEvent(msg);
@@ -227,18 +227,18 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // --- Ingest RIDGE Telemetry ---
+    // --- Ingestión de Telemetría RIDGE ---
     function handleRidgeTelemetry(data, raw) {
         currentPayload = data;
         rawJsonViewer.textContent = JSON.stringify(data, null, 2);
 
         crewIdEl.textContent = data.crew_member_id || 'CMD-01';
 
-        // Health Score
+        // Nivel de Salud
         const score = data.health_score ?? 100;
         healthScoreNum.textContent = score;
         
-        // Gauge ring progress (circumference = 2 * PI * 70 = 440)
+        // Progreso del anillo (circunferencia = 2 * PI * 70 = 440)
         const offset = 440 - (score / 100) * 440;
         healthGaugeProgress.style.strokeDashoffset = offset;
 
@@ -253,15 +253,15 @@ document.addEventListener('DOMContentLoaded', () => {
             healthScoreNum.style.color = 'var(--crit-crimson)';
         }
 
-        // Survival Triad
+        // Tríada de Supervivencia
         const surv = data.survival_status;
         isVitalsPresent = surv.vital_signs_present;
 
-        updateSurvivalPill(vitalSignsPill, surv.vital_signs_present, 'DETECTED (ACTIVE)', 'ASYSTOLE / COLLAPSE');
-        updateSurvivalPill(sosPill, !surv.sos_panic_button_active, 'ARMED (STANDBY)', 'ENGAGED / ACTIVE');
-        updateSurvivalPill(cabinPressurePill, surv.cabin_pressure_nominal, '101.3 kPa NOMINAL', 'DEPRESSURIZATION!');
+        updateSurvivalPill(vitalSignsPill, surv.vital_signs_present, 'DETECTADOS (ACTIVO)', 'ASISTOLIA / PARO CARDÍACO');
+        updateSurvivalPill(sosPill, !surv.sos_panic_button_active, 'ARMADO (EN ESPERA)', 'ACTIVADO (EMERGENCIA)');
+        updateSurvivalPill(cabinPressurePill, surv.cabin_pressure_nominal, '101.3 kPa NOMINAL', '¡DESCOMPRESIÓN DE CABINA!');
 
-        // Update RIDGE metrics
+        // Actualizar Métricas RIDGE
         const r = data.telemetry_ridge.R_radiation;
         const i = data.telemetry_ridge.I_isolation;
         const d = data.telemetry_ridge.D_distance;
@@ -269,9 +269,9 @@ document.addEventListener('DOMContentLoaded', () => {
         const e = data.telemetry_ridge.E_environment;
 
         currentBpm = g.heart_rate_bpm;
-        ecgBpmDisplay.textContent = `${currentBpm} BPM`;
+        ecgBpmDisplay.textContent = `${currentBpm} LPM`;
 
-        // R - Radiation
+        // R - Radiación
         setMetric('val_rad_acute', r.acute_event_mSv.toFixed(1), r.acute_event_mSv > 250);
         setMetric('val_rad_career', r.career_accumulated_mSv.toFixed(1), r.career_accumulated_mSv > 600);
         const careerPct = Math.min(100, (r.career_accumulated_mSv / 600) * 100);
@@ -281,34 +281,33 @@ document.addEventListener('DOMContentLoaded', () => {
             careerBar.className = 'progress-bar-fill ' + (careerPct > 80 ? 'crit' : careerPct > 50 ? 'warn' : '');
         }
 
-        // I - Isolation
+        // I - Aislamiento
         setMetric('val_sleep_hours', i.sleep_hours_last_24h.toFixed(1), false, i.sleep_hours_last_24h < 6.0);
         setMetric('val_hrv_drop', i.hrv_rmssd_drop_pct.toFixed(1), false, i.hrv_rmssd_drop_pct > 25.0);
         setMetric('val_pvt_ms', i.pvt_reaction_time_ms, false, i.pvt_reaction_time_ms > 350);
 
-        // D - Distance
+        // D - Distancia
         setMetric('val_comm_delay', d.comm_delay_oneway_min.toFixed(1), false);
         setMetric('val_med_supply', d.med_supply_days_remaining, false);
 
-        // G - Gravity / Cardio / SANS
+        // G - Gravedad / Cardio / SANS
         setMetric('val_hr', g.heart_rate_bpm, g.heart_rate_bpm > 110 || g.heart_rate_bpm === 0);
         const bpText = `${g.blood_pressure_sys}/${g.blood_pressure_dia}`;
         setMetric('val_bp', bpText, g.blood_pressure_sys > 155 || g.blood_pressure_dia > 95);
         setMetric('val_onsd', g.onsd_mm.toFixed(2), g.onsd_mm > 5.8);
         setMetric('val_exercise', g.exercise_completed_hours.toFixed(1), false);
 
-        // E - Environment
+        // E - Entorno
         setMetric('val_ppco2', e.cabin_ppco2_mmHg.toFixed(2), e.cabin_ppco2_mmHg > 3.0);
         setMetric('val_spo2', e.spo2_pct, e.spo2_pct < 95);
         setMetric('val_temp', e.body_temperature_c.toFixed(1), e.body_temperature_c > 38.5);
 
-        // Check if survival is restored and reset SOMA indicator if needed
+        // Reinicio automático de indicador SOMA si se restituyen las constantes
         if (surv.vital_signs_present && !surv.sos_panic_button_active && surv.cabin_pressure_nominal) {
             if (somaTriggered) {
-                // SOMA cleared
                 somaTriggered = false;
                 somaPill.className = 'status-pill soma-standby';
-                somaLabel.textContent = 'SOMA WATCHDOG: NOMINAL';
+                somaLabel.textContent = 'WATCHDOG SOMA: NOMINAL';
                 somaStrip.classList.remove('visible');
                 somaDetailsCard.classList.remove('visible');
                 window.aerospaceAudio.stopAlarm();
@@ -340,7 +339,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // --- Ingest Clinical Alert sub-JSON ---
+    // --- Ingestión de Alertas Clínicas del Flight Surgeon AI ---
     function handleClinicalAlert(alert) {
         const key = alert.trigger_metric;
         activeAlerts.set(key, { ...alert, receivedAt: new Date() });
@@ -361,20 +360,20 @@ document.addEventListener('DOMContentLoaded', () => {
                 <div class="directive-card NOMINAL">
                     <div class="directive-header">
                         <span class="directive-status-tag">NOMINAL</span>
-                        <span class="directive-time">AUTONOMOUS FLIGHT SURGEON ACTIVE</span>
+                        <span class="directive-time">IA MÉDICO DE VUELO ACTIVO</span>
                     </div>
-                    <div class="directive-diagnosis">ALL BIOMEDICAL STANDARDS WITHIN NASA LIMITS</div>
-                    <div class="directive-trigger">Continuous passive monitoring active across 5 RIDGE pillars.</div>
+                    <div class="directive-diagnosis">TODOS LOS ESTÁNDARES BIOMÉDICOS DENTRO DE LOS LÍMITES NASA</div>
+                    <div class="directive-trigger">Monitoreo pasivo continuo activo en los 5 pilares RIDGE.</div>
                     <div class="directive-action-box">
-                        <div class="directive-action-label">Directive:</div>
-                        Maintain scheduled deep space operational duties and countermeasure exercises.
+                        <div class="directive-action-label">Directiva:</div>
+                        Mantener tareas operacionales de espacio profundo y ejercicios de contramedidas programados.
                     </div>
                 </div>
             `;
             return;
         }
 
-        // Render sorted by severity
+        // Ordenar por severidad crítica primero
         const sorted = Array.from(activeAlerts.values()).sort((a, b) => {
             if (a.status === 'CRITICAL' && b.status !== 'CRITICAL') return -1;
             if (b.status === 'CRITICAL' && a.status !== 'CRITICAL') return 1;
@@ -390,9 +389,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     <span class="directive-time">${alert.timestamp || new Date().toISOString().substring(11, 19) + ' UTC'}</span>
                 </div>
                 <div class="directive-diagnosis">${alert.diagnosis}</div>
-                <div class="directive-trigger">Trigger: ${alert.trigger_metric} = ${alert.trigger_value} (${alert.threshold_limit})</div>
+                <div class="directive-trigger">Disparador: ${alert.trigger_metric} = ${alert.trigger_value} (${alert.threshold_limit})</div>
                 <div class="directive-action-box">
-                    <div class="directive-action-label">TACTICAL RESOLUTION ACTION:</div>
+                    <div class="directive-action-label">ACCIÓN TÁCTICA INMEDIATA:</div>
                     ${alert.tactical_action}
                 </div>
             `;
@@ -400,23 +399,23 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- Ingest SOMA DSOC Emergency Archive Event ---
+    // --- Ingestión de Evento de Emergencia SOMA DSOC ---
     function handleSomaEvent(soma) {
-        console.warn('[SOMA EMERGENCY BURST INGESTED]', soma);
+        console.warn('[RÁFAGA DE EMERGENCIA SOMA RECIBIDA]', soma);
         somaTriggered = true;
 
         somaPill.className = 'status-pill soma-active';
-        somaLabel.textContent = 'SOMA: SCIENCE OVER SURVIVAL';
+        somaLabel.textContent = 'SOMA: CIENCIA SOBRE SUPERVIVENCIA';
         somaStrip.classList.add('visible');
 
         document.getElementById('somaReasonText').textContent = soma.trigger_reason;
         document.getElementById('somaDsocStation').textContent = soma.target_ground_station;
-        document.getElementById('somaDelayText').textContent = `${soma.light_delay_minutes} min light delay`;
+        document.getElementById('somaDelayText').textContent = `${soma.light_delay_minutes} min retardo lumínico`;
 
-        // Fill SOMA details card
+        // Llenar tarjeta de detalles forenses SOMA
         somaDetailsCard.classList.add('visible');
-        document.getElementById('somaSamplesCount').textContent = `${soma.historical_samples_count} records (1000 Hz)`;
-        document.getElementById('somaDataSize').textContent = `${soma.raw_payload_bytes} B raw → ${soma.compressed_payload_bytes} B`;
+        document.getElementById('somaSamplesCount').textContent = `${soma.historical_samples_count} registros (1000 Hz)`;
+        document.getElementById('somaDataSize').textContent = `${soma.raw_payload_bytes} B sin comprimir → ${soma.compressed_payload_bytes} B`;
         document.getElementById('somaCompression').textContent = `${soma.compression_algorithm} (Ratio: ${soma.compression_ratio}x)`;
         document.getElementById('somaCipher').textContent = soma.encryption_cipher;
         document.getElementById('somaNonce').textContent = soma.iv_nonce_hex;
@@ -426,17 +425,17 @@ document.addEventListener('DOMContentLoaded', () => {
         window.aerospaceAudio.startMasterAlarm();
     }
 
-    // --- Interactive Command Cockpit (Simulation Ingestion) ---
+    // --- Cockpit de Simulación Interactiva ---
     function sendCommand(cmd) {
         if (!ws || ws.readyState !== WebSocket.OPEN) {
-            alert('WebSocket connection is not established. Please make sure vitalgrid_daemon.exe is running on port 9002.');
+            alert('Conexión WebSocket no establecida. Asegúrate de que vitalgrid_daemon.exe esté ejecutándose en el puerto 9002.');
             return;
         }
         ws.send(cmd);
-        console.log(`[VITALGRID COMMAND SENT] ${cmd}`);
+        console.log(`[COMANDO VITALGRID ENVIADO] ${cmd}`);
     }
 
-    // Bind simulation buttons
+    // Vincular botones de inyección de anomalías
     document.getElementById('btnSos')?.addEventListener('click', () => sendCommand('TRIGGER_SOS'));
     document.getElementById('btnDepressurize')?.addEventListener('click', () => sendCommand('DEPRESSURIZE'));
     document.getElementById('btnAsystole')?.addEventListener('click', () => sendCommand('ASYSTOLE'));
@@ -459,6 +458,6 @@ document.addEventListener('DOMContentLoaded', () => {
         sendCommand('RESET_SURVIVAL');
     });
 
-    // Start WebSocket
+    // Iniciar conexión WebSocket
     connectWebSocket();
 });

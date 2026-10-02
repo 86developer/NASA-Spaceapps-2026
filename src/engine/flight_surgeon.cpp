@@ -20,8 +20,8 @@ std::vector<ClinicalAlert> FlightSurgeonAI::evaluate(const RidgePayload& payload
         alert.trigger_metric = "acute_event_mSv";
         alert.trigger_value = std::to_string(r.acute_event_mSv) + " mSv";
         alert.threshold_limit = "> " + std::to_string(THRESHOLD_ACUTE_RAD_CRITICAL_MSV) + " mSv";
-        alert.diagnosis = "ACUTE RADIATION SYNDROME (ARS) - SOLAR PARTICLE EVENT (SPE) MASSIVE EXPOSURE";
-        alert.tactical_action = "IMMEDIATE EVACUATION to deep storm shelter core (water wall shielded compartment). Administer Filgrastim (G-CSF) 300mcg SQ. Power down non-vital forward bus avionics.";
+        alert.diagnosis = "SÍNDROME DE RADIACIÓN AGUDA (ARS) - EXPOSICIÓN MASIVA A EVENTO DE PARTÍCULAS SOLARES (SPE)";
+        alert.tactical_action = "EVACUACIÓN INMEDIATA al núcleo blindado (Storm Shelter con paredes de agua). Administrar Filgrastim (G-CSF) 300mcg subcutáneo. Desenergizar aviónica delantera no esencial.";
         alert.timestamp = ts;
         alerts.push_back(alert);
     }
@@ -32,8 +32,8 @@ std::vector<ClinicalAlert> FlightSurgeonAI::evaluate(const RidgePayload& payload
         alert.trigger_metric = "career_accumulated_mSv";
         alert.trigger_value = std::to_string(r.career_accumulated_mSv) + " mSv";
         alert.threshold_limit = "> " + std::to_string(THRESHOLD_CAREER_RAD_CRITICAL_MSV) + " mSv";
-        alert.diagnosis = "CUMULATIVE LIFETIME IONIZING RADIATION CEILING EXCEEDED";
-        alert.tactical_action = "Terminate all EVA operations permanently. Reassign to high-shielded central habitat watch. Initiate daily peripheral blood lymphocyte chromosomal assays.";
+        alert.diagnosis = "LÍMITE MÁXIMO DE RADIACIÓN IONIZANTE DE CARRERA EXCEDIDO";
+        alert.tactical_action = "Suspender permanentemente todas las actividades extravehiculares (EVA). Reasignar a guardia en hábitat central de alto blindaje. Iniciar análisis cromosómicos diarios en linfocitos.";
         alert.timestamp = ts;
         alerts.push_back(alert);
     }
@@ -45,8 +45,8 @@ std::vector<ClinicalAlert> FlightSurgeonAI::evaluate(const RidgePayload& payload
         alert.trigger_metric = "blood_pressure";
         alert.trigger_value = std::to_string(g.blood_pressure_sys) + "/" + std::to_string(g.blood_pressure_dia) + " mmHg";
         alert.threshold_limit = "> " + std::to_string(THRESHOLD_BP_SYS_CRITICAL) + "/" + std::to_string(THRESHOLD_BP_DIA_CRITICAL) + " mmHg";
-        alert.diagnosis = "HYPERTENSIVE CRISIS UNDER MICROGRAVITY - CEREBROVASCULAR RISK";
-        alert.tactical_action = "Cease all aerobic/resistive exercises. Secure crew in supine restraint. Administer sublingual Captopril 25mg; repeat BP every 10 min. Monitor for intracranial hemorrhage signs.";
+        alert.diagnosis = "CRISIS HIPERTENSIVA EN MICROGRAVEDAD - RIESGO CEREBROVASCULAR";
+        alert.tactical_action = "Suspender todo ejercicio aeróbico y resistivo. Asegurar a la tripulación en posición supina. Administrar Captopril 25mg sublingual; repetir control de presión arterial cada 10 min. Vigilar signos de hemorragia intracraneal.";
         alert.timestamp = ts;
         alerts.push_back(alert);
     }
@@ -57,8 +57,8 @@ std::vector<ClinicalAlert> FlightSurgeonAI::evaluate(const RidgePayload& payload
         alert.trigger_metric = "heart_rate_bpm";
         alert.trigger_value = std::to_string(g.heart_rate_bpm) + " bpm";
         alert.threshold_limit = "> " + std::to_string(THRESHOLD_HR_CRITICAL_BPM) + " bpm";
-        alert.diagnosis = "SUSTAINED SUPRAVENTRICULAR TACHYCARDIA / AUTONOMIC DYSREGULATION";
-        alert.tactical_action = "Perform vagal maneuvers (modified Valsalva maneuver). Verify hydration state and electrolyte telemetry (K+/Mg2+). Prepare IV Metoprolol 5mg if persistent > 15 min.";
+        alert.diagnosis = "TAQUICARDIA SUPRAVENTRICULAR SOSTENIDA / DESREGULACIÓN AUTÓNOMA";
+        alert.tactical_action = "Realizar maniobras vagales (maniobra de Valsalva modificada). Verificar estado de hidratación y telemetría de electrolitos (K+/Mg2+). Preparar Metoprolol 5mg IV si persiste > 15 min.";
         alert.timestamp = ts;
         alerts.push_back(alert);
     }
@@ -71,8 +71,8 @@ std::vector<ClinicalAlert> FlightSurgeonAI::evaluate(const RidgePayload& payload
         ss << std::fixed << std::setprecision(2) << g.onsd_mm << " mm";
         alert.trigger_value = ss.str();
         alert.threshold_limit = "> " + std::to_string(THRESHOLD_ONSD_CRITICAL_MM) + " mm";
-        alert.diagnosis = "SPACEFLIGHT-ASSOCIATED NEURO-OCULAR SYNDROME (SANS) - ELEVATED INTRACRANIAL PRESSURE (ICP)";
-        alert.tactical_action = "Deploy Lower Body Negative Pressure (LBNP) device at -35 mmHg for 2 hours to redistribute cephalad fluid caudal. Administer oral Acetazolamide 250mg PO. Schedule high-res funduscopy.";
+        alert.diagnosis = "SÍNDROME NEURO-OCULAR ASOCIADO AL VUELO ESPACIAL (SANS) - PRESIÓN INTRACRANEAL (ICP) CRÍTICA";
+        alert.tactical_action = "Desplegar dispositivo de Presión Negativa en Miembros Inferiores (LBNP) a -35 mmHg por 2 horas para redistribución caudal del fluido cefálico. Administrar Acetazolamida 250mg VO. Programar fondo de ojo de alta resolución.";
         alert.timestamp = ts;
         alerts.push_back(alert);
     }
@@ -86,8 +86,8 @@ std::vector<ClinicalAlert> FlightSurgeonAI::evaluate(const RidgePayload& payload
         ss << std::fixed << std::setprecision(2) << e.cabin_ppco2_mmHg << " mmHg";
         alert.trigger_value = ss.str();
         alert.threshold_limit = "> " + std::to_string(THRESHOLD_PPCO2_CRITICAL_MMHG) + " mmHg";
-        alert.diagnosis = "CABIN ATMOSPHERIC HYPERCAPNIA - CO2 RETENTION / ECLSS DEGRADATION";
-        alert.tactical_action = "Cycle Carbon Dioxide Removal Assembly (CDRA) beds to Fast Desorption mode. Don emergency crew O2 masks. Activate LiOH backup chemical scrubber cartridges in sleep station.";
+        alert.diagnosis = "HIPERCAPNIA ATMOSFÉRICA EN CABINA - RETENCIÓN DE CO2 / DEGRADACIÓN ECLSS";
+        alert.tactical_action = "Ciclar lechos del Ensamblaje de Eliminación de Dióxido de Carbono (CDRA) a modo de desorción rápida de emergencia. Colocar máscaras de O2 a la tripulación. Activar cartuchos químicos de LiOH de respaldo en cabina.";
         alert.timestamp = ts;
         alerts.push_back(alert);
     }
@@ -98,8 +98,8 @@ std::vector<ClinicalAlert> FlightSurgeonAI::evaluate(const RidgePayload& payload
         alert.trigger_metric = "spo2_pct";
         alert.trigger_value = std::to_string(e.spo2_pct) + "%";
         alert.threshold_limit = "< " + std::to_string(THRESHOLD_SPO2_CRITICAL_PCT) + "%";
-        alert.diagnosis = "ACUTE SYSTEMIC HYPOXEMIA / PULMONARY V/Q MISMATCH";
-        alert.tactical_action = "Deliver 100% O2 via aviator mask at 6 L/min immediately. Inspect suit/cabin O2 partial pressure sensors. Auscultate lung bases with digital stethoscope for atelectasis.";
+        alert.diagnosis = "HIPOXEMIA SISTÉMICA AGUDA / DESEQUILIBRIO VENTILACIÓN-PERFUSIÓN (V/Q)";
+        alert.tactical_action = "Suministrar O2 al 100% mediante mascarilla de aviador a 6 L/min inmediatamente. Inspeccionar sensores de presión parcial de O2 en traje y cabina. Auscultar bases pulmonares para descartar atelectasia.";
         alert.timestamp = ts;
         alerts.push_back(alert);
     }
@@ -112,8 +112,8 @@ std::vector<ClinicalAlert> FlightSurgeonAI::evaluate(const RidgePayload& payload
         ss << std::fixed << std::setprecision(1) << e.body_temperature_c << " °C";
         alert.trigger_value = ss.str();
         alert.threshold_limit = "> " + std::to_string(THRESHOLD_BODY_TEMP_CRITICAL_C) + " °C";
-        alert.diagnosis = "SPACE PYREXIA / MALIGNANT HYPERTHERMIA OR DEEP SPACE SEPSIS";
-        alert.tactical_action = "Engage Liquid Cooling and Ventilation Garment (LCVG) in active chiller loop. Infuse IV Paracetamol 1000mg. Draw blood samples into Bio-Analyzer cartridge for sepsis panel.";
+        alert.diagnosis = "FIEBRE ESPACIAL / HIPERTERMIA MALIGNA O SEPSIS DE ESPACIO PROFUNDO";
+        alert.tactical_action = "Conectar Prenda de Ventilación y Enfriamiento Líquido (LCVG) en bucle activo de refrigeración. Infundir Paracetamol 1000mg IV. Extraer muestras de sangre en cartucho de bioanalizador para panel de sepsis.";
         alert.timestamp = ts;
         alerts.push_back(alert);
     }
@@ -127,8 +127,8 @@ std::vector<ClinicalAlert> FlightSurgeonAI::evaluate(const RidgePayload& payload
         ss << std::fixed << std::setprecision(1) << i.sleep_hours_last_24h << " h";
         alert.trigger_value = ss.str();
         alert.threshold_limit = "< " + std::to_string(THRESHOLD_SLEEP_WARN_HOURS) + " h";
-        alert.diagnosis = "CHRONIC SLEEP DEBT / COGNITIVE FATIGUE IMPAIRMENT RISK";
-        alert.tactical_action = "Prescribe mandatory 60-min restorative rest in darkened crew quarters. Shift ambient lighting to 480nm-depleted warm circadian spectrum. Hold safety-critical robotics tasks.";
+        alert.diagnosis = "DEUDA CRÓNICA DE SUEÑO / RIESGO DE DETERIORO POR FATIGA COGNITIVA";
+        alert.tactical_action = "Prescribir reposo reparador obligatorio de 60 min en camarote oscurecido. Cambiar iluminación ambiental a espectro circadiano cálido sin componente azul de 480nm. Suspender tareas robóticas de alta criticidad.";
         alert.timestamp = ts;
         alerts.push_back(alert);
     }
@@ -141,8 +141,8 @@ std::vector<ClinicalAlert> FlightSurgeonAI::evaluate(const RidgePayload& payload
         ss << std::fixed << std::setprecision(1) << i.hrv_rmssd_drop_pct << "%";
         alert.trigger_value = ss.str();
         alert.threshold_limit = "> " + std::to_string(THRESHOLD_HRV_DROP_WARN_PCT) + "%";
-        alert.diagnosis = "AUTONOMIC SYMPATHETIC DOMINANCE & HIGH ALLORITHMIC STRESS LOAD";
-        alert.tactical_action = "Initiate guided biofeedback resonance breathing (0.1 Hz pacing) for 15 min. Reduce sensory input in workstation. Assess cortisol/melatonin salivary biomarkers.";
+        alert.diagnosis = "DOMINANCIA SIMPÁTICA AUTÓNOMA Y ELEVADA CARGA DE ESTRÉS ALOSTÁTICO";
+        alert.tactical_action = "Iniciar biorretroalimentación de respiración resonante guiada (marcapasos a 0.1 Hz) durante 15 min. Reducir estímulos sensoriales en la estación de trabajo. Evaluar biomarcadores salivales de cortisol y melatonina.";
         alert.timestamp = ts;
         alerts.push_back(alert);
     }

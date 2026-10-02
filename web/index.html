@@ -1,31 +1,31 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VitalGrid | Deep Space Astronaut Health Monitoring & Autonomous Flight Surgeon</title>
+    <title>VitalGrid | Monitoreo de Salud de Astronautas en Espacio Profundo e IA Médico de Vuelo</title>
     <link rel="stylesheet" href="css/style.css">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🚀</text></svg>">
 </head>
 <body>
 
-    <!-- Cockpit Aerospace Header -->
+    <!-- Encabezado Aeroespacial del Cockpit -->
     <header class="cockpit-header">
         <div class="brand-section">
             <span class="nasa-logo-badge">NASA</span>
             <div class="brand-text">
                 <h1 class="project-title">Vital<span>Grid</span></h1>
-                <span class="mission-tag">DEEP SPACE TRANSIT :: ARTEMIS V / MARS CYCLER</span>
+                <span class="mission-tag">TRÁNSITO DE ESPACIO PROFUNDO :: ARTEMIS V / MARS CYCLER</span>
             </div>
         </div>
 
         <div class="mission-clock-section">
             <div class="clock-box">
-                <span class="clock-label">MISSION ELAPSED TIME</span>
+                <span class="clock-label">TIEMPO TRANSCURRIDO DE MISIÓN</span>
                 <span class="clock-val" id="metClock">MET +042:18:24:12</span>
             </div>
             <div class="clock-box">
-                <span class="clock-label">SPACECRAFT TELEMETRY</span>
+                <span class="clock-label">TELEMETRÍA DE LA NAVE</span>
                 <span class="clock-val" id="utcClock">12:33:24 UTC</span>
             </div>
         </div>
@@ -33,47 +33,47 @@
         <div class="header-status-pills">
             <div id="connectionPill" class="status-pill disconnected">
                 <span class="status-dot"></span>
-                <span id="connectionLabel">CONNECTING...</span>
+                <span id="connectionLabel">CONECTANDO...</span>
             </div>
 
             <div id="somaPill" class="status-pill soma-standby">
                 <span class="status-dot"></span>
-                <span id="somaLabel">SOMA WATCHDOG: ARMED</span>
+                <span id="somaLabel">WATCHDOG SOMA: ARMADO</span>
             </div>
 
-            <button id="muteBtn" class="btn-icon-hud" title="Toggle Aerospace Chimes">MUTE AUDIO</button>
+            <button id="muteBtn" class="btn-icon-hud" title="Alternar audio aeroespacial">SILENCIAR AUDIO</button>
         </div>
     </header>
 
-    <!-- SOMA Science over Survival Emergency Banner (Auto-shows when triggered) -->
+    <!-- Franja de Emergencia SOMA Ciencia sobre Supervivencia (Se activa automáticamente) -->
     <div id="somaStrip" class="soma-emergency-strip">
         <div class="soma-strip-content">
             <div class="soma-title-box">
                 <div class="soma-pulse-beacon"></div>
                 <div>
-                    <div class="soma-banner-h1">CRITICAL SOMA ARCHIVE EVENT INITIATED :: SCIENCE OVER SURVIVAL</div>
-                    <div class="soma-banner-desc" id="somaReasonText">ASTRONAUT VITAL SIGNS COLLAPSE / ASYSTOLE DETECTED</div>
+                    <div class="soma-banner-h1">EVENTO CRÍTICO DE ARCHIVO SOMA INICIADO :: CIENCIA SOBRE SUPERVIVENCIA</div>
+                    <div class="soma-banner-desc" id="somaReasonText">COLAPSO DE SIGNOS VITALES DEL ASTRONAUTA / ASISTOLIA DETECTADA</div>
                 </div>
             </div>
 
             <div class="dsoc-laser-link-box">
-                <span class="dsoc-badge">DSOC 1550nm LASER ACTIVE</span>
-                <span id="somaDsocStation">NASA DSN Goldstone 34m Beam Waveguide</span>
-                <span id="somaDelayText" style="color: var(--warn-amber);">20.5 min light delay</span>
+                <span class="dsoc-badge">LÁSER DSOC 1550nm ACTIVO</span>
+                <span id="somaDsocStation">NASA DSN Goldstone - Guía de Ondas de 34m</span>
+                <span id="somaDelayText" style="color: var(--warn-amber);">20.5 min retardo lumínico</span>
             </div>
         </div>
     </div>
 
-    <!-- Main Cockpit Layout -->
+    <!-- Contenedor Principal del Cockpit -->
     <main class="cockpit-container">
 
-        <!-- LEFT COLUMN: Crew & Immediate Survival Triad -->
+        <!-- COLUMNA IZQUIERDA: Tripulación y Tríada de Supervivencia Inmediata -->
         <div class="cockpit-col left-col">
             
-            <!-- Crew Member Bio -->
+            <!-- Ficha del Tripulante -->
             <div class="glass-panel">
                 <div class="panel-header">
-                    <span class="panel-title">ASTRONAUT TELEMETRY</span>
+                    <span class="panel-title">TELEMETRÍA DEL ASTRONAUTA</span>
                     <span class="panel-badge" id="crewId">CMD-01</span>
                 </div>
 
@@ -81,11 +81,11 @@
                     <div class="crew-avatar-hexagon">01</div>
                     <div class="crew-meta">
                         <h2>Dr. Marcus Vance</h2>
-                        <p>Mission Commander / Flight Engineer</p>
+                        <p>Comandante de Misión / Ingeniero de Vuelo</p>
                     </div>
                 </div>
 
-                <!-- Health Score Circular Ring -->
+                <!-- Calibrador de Salud en Anillo -->
                 <div class="health-score-container">
                     <div class="gauge-svg-wrap">
                         <svg class="gauge-svg" viewBox="0 0 160 160">
@@ -94,72 +94,72 @@
                         </svg>
                         <div class="gauge-center-text">
                             <div class="score-num" id="healthScoreNum">92</div>
-                            <div class="score-sub">HEALTH SCORE</div>
+                            <div class="score-sub">NIVEL DE SALUD</div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Survival Triad -->
+                <!-- Tríada de Supervivencia -->
                 <div class="survival-triad">
                     <div id="vitalSignsPill" class="survival-pill nominal">
-                        <span>VITAL SIGNS MONITOR</span>
-                        <span class="tag">DETECTED (ACTIVE)</span>
+                        <span>MONITOR DE SIGNOS VITALES</span>
+                        <span class="tag">DETECTADOS (ACTIVO)</span>
                     </div>
                     <div id="sosPill" class="survival-pill nominal">
-                        <span>CREW SOS PANIC BUTTON</span>
-                        <span class="tag">ARMED (STANDBY)</span>
+                        <span>BOTÓN DE PÁNICO SOS TRIPULACIÓN</span>
+                        <span class="tag">ARMADO (EN ESPERA)</span>
                     </div>
                     <div id="cabinPressurePill" class="survival-pill nominal">
-                        <span>CABIN PRESSURE ATM</span>
+                        <span>PRESIÓN ATMOSFÉRICA DE CABINA</span>
                         <span class="tag">101.3 kPa NOMINAL</span>
                     </div>
                 </div>
             </div>
 
-            <!-- Live ECG / Cardiac Canvas -->
+            <!-- ECG en Vivo / Canvas Cardíaco -->
             <div class="glass-panel">
                 <div class="panel-header">
-                    <span class="panel-title">CARDIAC TELEMETRY (LEAD II)</span>
-                    <span class="panel-badge" id="ecgBpmDisplay">105 BPM</span>
+                    <span class="panel-title">TELEMETRÍA CARDÍACA (DERIVACIÓN II)</span>
+                    <span class="panel-badge" id="ecgBpmDisplay">105 LPM</span>
                 </div>
                 <div class="ecg-container">
                     <canvas id="ecgCanvas"></canvas>
-                    <div class="ecg-overlay-stats">REAL-TIME 1000Hz SENSOR</div>
+                    <div class="ecg-overlay-stats">SENSOR A 1000Hz EN TIEMPO REAL</div>
                 </div>
             </div>
 
-            <!-- SOMA Forensic Archive Details (Shows when SOMA triggers) -->
+            <!-- Ficha Forense de Archivo SOMA (Visible al dispararse SOMA) -->
             <div id="somaDetailsCard" class="soma-details-card">
                 <div class="panel-header" style="margin-bottom: 4px;">
-                    <span class="panel-title" style="color: var(--crit-crimson);">[SOMA BLACK-BOX DOWNLINK]</span>
-                    <span class="panel-badge" style="background: var(--crit-crimson); color: #fff;">BURST TRANSMITTED</span>
+                    <span class="panel-title" style="color: var(--crit-crimson);">[ENLACE DESCENDENTE CAJA NEGRA SOMA]</span>
+                    <span class="panel-badge" style="background: var(--crit-crimson); color: #fff;">RÁFAGA TRANSMITIDA</span>
                 </div>
                 <p style="font-family: var(--font-mono); font-size: 0.72rem; color: #ffccd9;">
-                    Terminal biomedical records archived under military protocol and enqueued for optical transmission to Earth.
+                    Registros biomédicos terminales archivados bajo protocolo militar y encolados para transmisión óptica hacia la Tierra.
                 </p>
                 <div class="soma-kv-grid">
                     <div class="soma-kv-item">
-                        <div class="soma-k">SAMPLE RATE</div>
-                        <div class="soma-v" id="somaSamplesCount">500 records (1000 Hz)</div>
+                        <div class="soma-k">FRECUENCIA DE MUESTREO</div>
+                        <div class="soma-v" id="somaSamplesCount">500 registros (1000 Hz)</div>
                     </div>
                     <div class="soma-kv-item">
-                        <div class="soma-k">DATA CONTAINER</div>
+                        <div class="soma-k">CONTENEDOR DE DATOS</div>
                         <div class="soma-v" id="somaDataSize">68.4 KB → 18.2 KB</div>
                     </div>
                     <div class="soma-kv-item">
-                        <div class="soma-k">COMPRESSION</div>
-                        <div class="soma-v" id="somaCompression">Zstd level 19 (3.65x)</div>
+                        <div class="soma-k">COMPRESIÓN</div>
+                        <div class="soma-v" id="somaCompression">Zstd nivel 19 (3.65x)</div>
                     </div>
                     <div class="soma-kv-item">
-                        <div class="soma-k">SECURITY CIPHER</div>
+                        <div class="soma-k">CIFRADO DE SEGURIDAD</div>
                         <div class="soma-v" id="somaCipher">AES-256-GCM</div>
                     </div>
                     <div class="soma-kv-item" style="grid-column: span 2;">
-                        <div class="soma-k">INITIALIZATION VECTOR (NONCE)</div>
+                        <div class="soma-k">VECTOR DE INICIALIZACIÓN (NONCE)</div>
                         <div class="soma-v" id="somaNonce">0x9F3E8B1A4C2D...</div>
                     </div>
                     <div class="soma-kv-item" style="grid-column: span 2;">
-                        <div class="soma-k">AUTHENTICATION TAG</div>
+                        <div class="soma-k">ETIQUETA DE AUTENTICACIÓN (TAG)</div>
                         <div class="soma-v" id="somaTag">0x5C81E3FA...</div>
                     </div>
                 </div>
@@ -167,42 +167,42 @@
 
         </div>
 
-        <!-- CENTER COLUMN: RIDGE 5-Pillar Telemetry Matrix -->
+        <!-- COLUMNA CENTRAL: Matriz de Telemetría RIDGE (5 Pilares) -->
         <div class="cockpit-col center-col">
             
             <div class="glass-panel" style="padding-bottom: 12px;">
                 <div class="panel-header">
-                    <span class="panel-title">NASA RIDGE BIOMEDICAL MATRIX</span>
-                    <span class="panel-badge">5 HAZARDS OF HUMAN SPACEFLIGHT</span>
+                    <span class="panel-title">MATRIZ BIOMÉDICA NASA RIDGE</span>
+                    <span class="panel-badge">5 PELIGROS DEL VUELO ESPACIAL HUMANO</span>
                 </div>
 
                 <div class="ridge-matrix">
 
-                    <!-- R - Radiation -->
+                    <!-- R - Radiación -->
                     <div class="pillar-card">
                         <div class="pillar-card-header">
                             <div class="pillar-badge">
                                 <span class="pillar-letter">R</span>
-                                <span>RADIATION HAZARD</span>
+                                <span>PELIGRO DE RADIACIÓN</span>
                             </div>
-                            <span class="panel-badge">IONIZING</span>
+                            <span class="panel-badge">IONIZANTE</span>
                         </div>
                         <div class="pillar-metrics-grid">
                             <div class="metric-cell">
-                                <span class="metric-name">Acute Event (SPE)</span>
+                                <span class="metric-name">Evento Agudo (SPE)</span>
                                 <div class="metric-value-row">
                                     <span class="metric-value" id="val_rad_acute">12.0</span>
                                     <span class="metric-unit">mSv</span>
                                 </div>
-                                <span class="metric-threshold-tag">Limit: &gt;250 mSv CRIT</span>
+                                <span class="metric-threshold-tag">Límite: &gt;250 mSv CRÍTICO</span>
                             </div>
                             <div class="metric-cell">
-                                <span class="metric-name">Career Accumulated</span>
+                                <span class="metric-name">Acumulada en Carrera</span>
                                 <div class="metric-value-row">
                                     <span class="metric-value" id="val_rad_career">145.2</span>
                                     <span class="metric-unit">mSv</span>
                                 </div>
-                                <span class="metric-threshold-tag">Limit: &gt;600 mSv CRIT</span>
+                                <span class="metric-threshold-tag">Límite: &gt;600 mSv CRÍTICO</span>
                                 <div class="progress-bar-wrap">
                                     <div id="careerRadBar" class="progress-bar-fill" style="width: 24%;"></div>
                                 </div>
@@ -210,34 +210,34 @@
                         </div>
                     </div>
 
-                    <!-- I - Isolation -->
+                    <!-- I - Aislamiento -->
                     <div class="pillar-card">
                         <div class="pillar-card-header">
                             <div class="pillar-badge">
                                 <span class="pillar-letter">I</span>
-                                <span>ISOLATION & CONFINEMENT</span>
+                                <span>AISLAMIENTO Y CONFINAMIENTO</span>
                             </div>
-                            <span class="panel-badge">NEURO-PSYCH</span>
+                            <span class="panel-badge">NEURO-PSICOLÓGICO</span>
                         </div>
                         <div class="pillar-metrics-grid">
                             <div class="metric-cell">
-                                <span class="metric-name">Sleep Last 24h</span>
+                                <span class="metric-name">Sueño Últimas 24h</span>
                                 <div class="metric-value-row">
                                     <span class="metric-value" id="val_sleep_hours">5.8</span>
-                                    <span class="metric-unit">hours</span>
+                                    <span class="metric-unit">horas</span>
                                 </div>
-                                <span class="metric-threshold-tag">Warn: &lt;6.0 h</span>
+                                <span class="metric-threshold-tag">Alerta: &lt;6.0 h</span>
                             </div>
                             <div class="metric-cell">
-                                <span class="metric-name">HRV RMSSD Drop</span>
+                                <span class="metric-name">Caída HRV RMSSD</span>
                                 <div class="metric-value-row">
                                     <span class="metric-value" id="val_hrv_drop">18.5</span>
                                     <span class="metric-unit">%</span>
                                 </div>
-                                <span class="metric-threshold-tag">Warn: &gt;25.0%</span>
+                                <span class="metric-threshold-tag">Alerta: &gt;25.0%</span>
                             </div>
                             <div class="metric-cell">
-                                <span class="metric-name">PVT Reaction Time</span>
+                                <span class="metric-name">Tiempo de Reacción PVT</span>
                                 <div class="metric-value-row">
                                     <span class="metric-value" id="val_pvt_ms">280</span>
                                     <span class="metric-unit">ms</span>
@@ -247,113 +247,113 @@
                         </div>
                     </div>
 
-                    <!-- D - Distance -->
+                    <!-- D - Distancia -->
                     <div class="pillar-card">
                         <div class="pillar-card-header">
                             <div class="pillar-badge">
                                 <span class="pillar-letter">D</span>
-                                <span>DISTANCE FROM EARTH</span>
+                                <span>DISTANCIA DESDE LA TIERRA</span>
                             </div>
-                            <span class="panel-badge">LOGISTICS</span>
+                            <span class="panel-badge">LOGÍSTICA</span>
                         </div>
                         <div class="pillar-metrics-grid">
                             <div class="metric-cell">
-                                <span class="metric-name">Comm Delay (One-Way)</span>
+                                <span class="metric-name">Retardo de Comunicación (Un Solo Sentido)</span>
                                 <div class="metric-value-row">
                                     <span class="metric-value" id="val_comm_delay">20.5</span>
                                     <span class="metric-unit">min</span>
                                 </div>
-                                <span class="metric-threshold-tag">Autonomous Mode Enforced</span>
+                                <span class="metric-threshold-tag">Modo Autónomo Forzado</span>
                             </div>
                             <div class="metric-cell">
-                                <span class="metric-name">Medical Supplies Left</span>
+                                <span class="metric-name">Suministros Médicos Restantes</span>
                                 <div class="metric-value-row">
                                     <span class="metric-value" id="val_med_supply">412</span>
-                                    <span class="metric-unit">days</span>
+                                    <span class="metric-unit">días</span>
                                 </div>
-                                <span class="metric-threshold-tag">Reserve Margin: 1.8x</span>
+                                <span class="metric-threshold-tag">Margen de Reserva: 1.8x</span>
                             </div>
                         </div>
                     </div>
 
-                    <!-- G - Gravity & Deconditioning (Cardio + SANS) -->
+                    <!-- G - Gravedad y Desacondicionamiento (Cardio + SANS) -->
                     <div class="pillar-card">
                         <div class="pillar-card-header">
                             <div class="pillar-badge">
                                 <span class="pillar-letter">G</span>
-                                <span>GRAVITY FIELDS / DECONDITIONING</span>
+                                <span>CAMPOS GRAVITATORIOS / DESACONDICIONAMIENTO</span>
                             </div>
-                            <span class="panel-badge">CARDIO & SANS</span>
+                            <span class="panel-badge">CARDIO Y SANS</span>
                         </div>
                         <div class="pillar-metrics-grid">
                             <div class="metric-cell">
-                                <span class="metric-name">Heart Rate</span>
+                                <span class="metric-name">Frecuencia Cardíaca</span>
                                 <div class="metric-value-row">
                                     <span class="metric-value" id="val_hr">105</span>
-                                    <span class="metric-unit">BPM</span>
+                                    <span class="metric-unit">LPM</span>
                                 </div>
-                                <span class="metric-threshold-tag">Crit: &gt;110 BPM</span>
+                                <span class="metric-threshold-tag">Crítico: &gt;110 LPM</span>
                             </div>
                             <div class="metric-cell">
-                                <span class="metric-name">Blood Pressure</span>
+                                <span class="metric-name">Presión Arterial</span>
                                 <div class="metric-value-row">
                                     <span class="metric-value" id="val_bp">135/85</span>
                                     <span class="metric-unit">mmHg</span>
                                 </div>
-                                <span class="metric-threshold-tag">Crit: &gt;155/95 mmHg</span>
+                                <span class="metric-threshold-tag">Crítico: &gt;155/95 mmHg</span>
                             </div>
                             <div class="metric-cell">
-                                <span class="metric-name">Optic Nerve (ONSD)</span>
+                                <span class="metric-name">Nervio Óptico (ONSD)</span>
                                 <div class="metric-value-row">
                                     <span class="metric-value" id="val_onsd">5.20</span>
                                     <span class="metric-unit">mm</span>
                                 </div>
-                                <span class="metric-threshold-tag">Crit: &gt;5.8 mm (SANS ICP)</span>
+                                <span class="metric-threshold-tag">Crítico: &gt;5.8 mm (SANS ICP)</span>
                             </div>
                             <div class="metric-cell">
-                                <span class="metric-name">Daily Exercise</span>
+                                <span class="metric-name">Ejercicio Diario</span>
                                 <div class="metric-value-row">
                                     <span class="metric-value" id="val_exercise">1.5</span>
-                                    <span class="metric-unit">hours</span>
+                                    <span class="metric-unit">horas</span>
                                 </div>
-                                <span class="metric-threshold-tag">Target: 2.0 h/day</span>
+                                <span class="metric-threshold-tag">Objetivo: 2.0 h/día</span>
                             </div>
                         </div>
                     </div>
 
-                    <!-- E - Hostile Closed Environment -->
+                    <!-- E - Entorno Cerrado Hostil -->
                     <div class="pillar-card full-width">
                         <div class="pillar-card-header">
                             <div class="pillar-badge">
                                 <span class="pillar-letter">E</span>
-                                <span>HOSTILE CLOSED ENVIRONMENT (ECLSS)</span>
+                                <span>ENTORNO CERRADO HOSTIL (ECLSS)</span>
                             </div>
-                            <span class="panel-badge">HABITAT LIFE SUPPORT</span>
+                            <span class="panel-badge">SOPORTE VITAL DE HÁBITAT</span>
                         </div>
                         <div class="pillar-metrics-grid">
                             <div class="metric-cell">
-                                <span class="metric-name">Cabin ppCO2</span>
+                                <span class="metric-name">ppCO2 en Cabina</span>
                                 <div class="metric-value-row">
                                     <span class="metric-value" id="val_ppco2">3.20</span>
                                     <span class="metric-unit">mmHg</span>
                                 </div>
-                                <span class="metric-threshold-tag">Crit: &gt;3.0 mmHg (Hypercapnia)</span>
+                                <span class="metric-threshold-tag">Crítico: &gt;3.0 mmHg (Hipercapnia)</span>
                             </div>
                             <div class="metric-cell">
-                                <span class="metric-name">Arterial SpO2</span>
+                                <span class="metric-name">SpO2 Arterial</span>
                                 <div class="metric-value-row">
                                     <span class="metric-value" id="val_spo2">94</span>
                                     <span class="metric-unit">%</span>
                                 </div>
-                                <span class="metric-threshold-tag">Crit: &lt;95% (Hypoxemia)</span>
+                                <span class="metric-threshold-tag">Crítico: &lt;95% (Hipoxia)</span>
                             </div>
                             <div class="metric-cell">
-                                <span class="metric-name">Body Core Temp</span>
+                                <span class="metric-name">Temp. Corporal Central</span>
                                 <div class="metric-value-row">
                                     <span class="metric-value" id="val_temp">37.9</span>
                                     <span class="metric-unit">°C</span>
                                 </div>
-                                <span class="metric-threshold-tag">Crit: &gt;38.5 °C (Space Fever)</span>
+                                <span class="metric-threshold-tag">Crítico: &gt;38.5 °C (Fiebre Espacial)</span>
                             </div>
                         </div>
                     </div>
@@ -361,91 +361,91 @@
                 </div>
             </div>
 
-            <!-- Raw JSON Telemetry Stream Inspector (Collapsible) -->
+            <!-- Inspector de Flujo JSON de Telemetría en Vivo -->
             <div class="glass-panel">
                 <div class="panel-header">
-                    <span class="panel-title">LIVE JSON STREAM INSPECTOR</span>
-                    <span class="panel-badge">RAW RIDGE INGESTION</span>
+                    <span class="panel-title">INSPECTOR DE FLUJO JSON EN VIVO</span>
+                    <span class="panel-badge">INGESTIÓN RIDGE DIRECTA</span>
                 </div>
-                <pre id="rawJsonViewer" class="raw-json-viewer">Connecting to VitalGrid backend WebSocket...</pre>
+                <pre id="rawJsonViewer" class="raw-json-viewer">Conectando con el WebSocket del backend VitalGrid...</pre>
             </div>
 
         </div>
 
-        <!-- RIGHT COLUMN: Flight Surgeon AI Clinical Directives & Interactive Simulation -->
+        <!-- COLUMNA DERECHA: Directivas Clínicas de la IA Médico de Vuelo y Simulación Interactiva -->
         <div class="cockpit-col right-col">
             
-            <!-- Flight Surgeon AI Directives -->
+            <!-- Directivas de la IA Médico de Vuelo -->
             <div class="glass-panel">
                 <div class="panel-header">
-                    <span class="panel-title">FLIGHT SURGEON AI</span>
-                    <span class="panel-badge">TACTICAL CLINICAL DIRECTIVES</span>
+                    <span class="panel-title">IA MÉDICO DE VUELO</span>
+                    <span class="panel-badge">DIRECTIVAS CLÍNICAS TÁCTICAS</span>
                 </div>
 
                 <div id="directivesList" class="directives-container">
                     <div class="directive-card NOMINAL">
                         <div class="directive-header">
                             <span class="directive-status-tag">NOMINAL</span>
-                            <span class="directive-time">AWAITING TELEMETRY TICK</span>
+                            <span class="directive-time">ESPERANDO TICK DE TELEMETRÍA</span>
                         </div>
-                        <div class="directive-diagnosis">INITIALIZING AUTONOMOUS CLINICAL PROTOCOLS</div>
-                        <div class="directive-trigger">Evaluating incoming RIDGE payload against NASA standards.</div>
+                        <div class="directive-diagnosis">INICIALIZANDO PROTOCOLOS CLÍNICOS AUTÓNOMOS</div>
+                        <div class="directive-trigger">Evaluando payload RIDGE entrante contra estándares de la NASA.</div>
                         <div class="directive-action-box">
-                            <div class="directive-action-label">Directive:</div>
-                            Passive monitoring active.
+                            <div class="directive-action-label">Directiva:</div>
+                            Monitoreo pasivo activo.
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Interactive Anomaly Simulation Cockpit -->
+            <!-- Cockpit de Simulación Interactiva de Anomalías -->
             <div class="glass-panel">
                 <div class="panel-header">
-                    <span class="panel-title">SIMULATION COCKPIT</span>
-                    <span class="panel-badge">ANOMALY INJECTION PAD</span>
+                    <span class="panel-title">COCKPIT DE SIMULACIÓN</span>
+                    <span class="panel-badge">PANEL DE INYECCIÓN DE ANOMALÍAS</span>
                 </div>
                 <p style="font-size: 0.76rem; color: var(--text-secondary); margin-bottom: 12px;">
-                    Inject critical biomedical failures into the C++ daemon to demonstrate real-time clinical responses and SOMA laser transmissions:
+                    Inyecta fallas biomédicas críticas en el demonio C++ para demostrar las respuestas clínicas en tiempo real y las transmisiones láser de SOMA:
                 </p>
 
                 <div class="sim-controls-grid">
-                    <!-- SOMA Triggers -->
+                    <!-- Disparadores SOMA -->
                     <button id="btnSos" class="sim-btn danger-btn">
-                        <span>🚨</span> TRIGGER SOS BUTTON
+                        <span>🚨</span> ACTIVAR BOTÓN SOS
                     </button>
                     <button id="btnDepressurize" class="sim-btn danger-btn">
-                        <span>💥</span> DEPRESSURIZE CABIN
+                        <span>💥</span> DESCOMPRESIÓN DE CABINA
                     </button>
                     <button id="btnAsystole" class="sim-btn danger-btn">
-                        <span>💔</span> ASYSTOLE / COLLAPSE
+                        <span>💔</span> ASISTOLIA / PARO CARDÍACO
                     </button>
                     <button id="btnResetSurvival" class="sim-btn">
-                        <span>🛡️</span> CLEAR SOMA ALARM
+                        <span>🛡️</span> RESTABLECER ALARMA SOMA
                     </button>
 
-                    <!-- Clinical Threshold Triggers -->
+                    <!-- Disparadores de Umbrales Clínicos -->
                     <button id="btnHypoxia" class="sim-btn">
-                        <span>🫁</span> INJECT HYPOXIA (&lt;95%)
+                        <span>🫁</span> INYECTAR HIPOXIA (&lt;95%)
                     </button>
                     <button id="btnHypercapnia" class="sim-btn">
-                        <span>💨</span> INJECT ppCO2 (&gt;3.0)
+                        <span>💨</span> INYECTAR ppCO2 (&gt;3.0)
                     </button>
                     <button id="btnSans" class="sim-btn">
-                        <span>👁️</span> INJECT SANS (&gt;5.8mm)
+                        <span>👁️</span> INYECTAR SANS (&gt;5.8mm)
                     </button>
                     <button id="btnSpeRadiation" class="sim-btn">
-                        <span>☢️</span> SOLAR FLARE (&gt;250mSv)
+                        <span>☢️</span> FULGURACIÓN SOLAR (&gt;250mSv)
                     </button>
                     <button id="btnFever" class="sim-btn">
-                        <span>🌡️</span> SPACE FEVER (&gt;38.5°C)
+                        <span>🌡️</span> FIEBRE ESPACIAL (&gt;38.5°C)
                     </button>
                     <button id="btnFatigue" class="sim-btn">
-                        <span>💤</span> CIRCADIAN FATIGUE
+                        <span>💤</span> FATIGA CIRCADIANA
                     </button>
 
-                    <!-- Reset -->
+                    <!-- Reinicio Nominal -->
                     <button id="btnResetNominal" class="sim-btn reset-btn">
-                        <span>✨</span> RESTORE ALL TO NOMINAL BASELINE
+                        <span>✨</span> RESTABLECER TODO A ESTADO NOMINAL
                     </button>
                 </div>
             </div>

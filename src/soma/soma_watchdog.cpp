@@ -63,13 +63,13 @@ void SomaWatchdog::evaluate_survival_state(const RidgePayload& payload) {
 
     if (!s.vital_signs_present) {
         violation = true;
-        reason = "ASTRONAUT VITAL SIGNS COLLAPSE / CARDIAC ASYSTOLE DETECTED";
+        reason = "COLAPSO DE SIGNOS VITALES DEL ASTRONAUTA / ASISTOLIA DETECTADA";
     } else if (s.sos_panic_button_active) {
         violation = true;
-        reason = "MANUAL SOS PANIC BUTTON ENGAGED BY CREW";
+        reason = "BOTÓN DE PÁNICO SOS MANUAL ACTIVADO POR LA TRIPULACIÓN";
     } else if (!s.cabin_pressure_nominal) {
         violation = true;
-        reason = "RAPID CABIN DEPRESSURIZATION / ECLSS STRUCTURAL BREACH";
+        reason = "DESCOMPRESIÓN RÁPIDA DE CABINA / FALLA ESTRUCTURAL DE ECLSS";
     }
 
     if (violation && !soma_triggered_.load()) {
@@ -81,7 +81,7 @@ void SomaWatchdog::evaluate_survival_state(const RidgePayload& payload) {
 void SomaWatchdog::reset_soma() {
     soma_triggered_.store(false);
     burst_in_progress_.store(false);
-    std::cout << "[SOMA WATCHDOG] Manual reset commanded. Telemetry sampling nominal (1 Hz)." << std::endl;
+    std::cout << "[SOMA WATCHDOG] Reinicio manual ordenado. Frecuencia de muestreo nominal (1 Hz)." << std::endl;
 }
 
 SomaTransmissionRecord SomaWatchdog::get_last_record() const {
@@ -114,9 +114,9 @@ void SomaWatchdog::execute_soma_emergency_protocol(const std::string& trigger_re
 
     // 1. Aumentar la frecuencia de muestreo del buffer circular (simular recolección a nivel milisegundo)
     std::cout << "\n================================================================================" << std::endl;
-    std::cout << ">>> [SOMA INITIATED] CRITICAL SURVIVAL FAILURE DETECTED <<<" << std::endl;
-    std::cout << "Reason: " << trigger_reason << std::endl;
-    std::cout << "[STEP 1/5] Circular Buffer boosted to 1000 Hz (1 ms resolution high-density burst capture)..." << std::endl;
+    std::cout << ">>> [SOMA INICIADO] FALLA CRÍTICA DE SUPERVIVENCIA DETECTADA <<<" << std::endl;
+    std::cout << "Motivo: " << trigger_reason << std::endl;
+    std::cout << "[PASO 1/5] Búfer circular aumentado a 1000 Hz (captura de ráfaga de alta densidad a 1 ms)..." << std::endl;
 
     // Simulate 100 ms burst of millisecond-rate samples
     for (int ms = 0; ms < 50; ++ms) {
@@ -126,7 +126,7 @@ void SomaWatchdog::execute_soma_emergency_protocol(const std::string& trigger_re
     }
 
     // 2. Empaquetar el histórico RIDGE
-    std::cout << "[STEP 2/5] Packaging historical RIDGE black-box telemetry container..." << std::endl;
+    std::cout << "[PASO 2/5] Empaquetando contenedor histórico RIDGE de caja negra..." << std::endl;
     auto history = circular_buffer_.get_history();
     size_t sample_count = history.size();
     
@@ -134,17 +134,17 @@ void SomaWatchdog::execute_soma_emergency_protocol(const std::string& trigger_re
     size_t raw_bytes = sample_count * 450 + 256;
 
     // 3. Aplicar compresión sin pérdida (simular uso de Zstd)
-    std::cout << "[STEP 3/5] Applying lossless compression: Zstandard (Zstd level 19 dictionary)..." << std::endl;
+    std::cout << "[PASO 3/5] Aplicando compresión sin pérdida: Zstandard (Zstd nivel 19 con diccionario)..." << std::endl;
     double compression_ratio = 3.65; // realistic Zstd compression ratio on repetitive telemetry
     size_t compressed_bytes = static_cast<size_t>(static_cast<double>(raw_bytes) / compression_ratio);
 
     // 4. Aplicar cifrado de grado militar (simular AES-256 GCM)
-    std::cout << "[STEP 4/5] Applying military-grade encryption: AES-256-GCM (NIST SP 800-38D authenticated)..." << std::endl;
+    std::cout << "[PASO 4/5] Aplicando cifrado de grado militar: AES-256-GCM (autenticado NIST SP 800-38D)..." << std::endl;
     std::string iv_nonce = "0x" + generate_random_hex(12); // 96-bit IV
     std::string auth_tag = "0x" + generate_random_hex(16); // 128-bit MAC Tag
 
     // 5. Enrutar el paquete cifrado a la cola de transmisión láser DSOC
-    std::cout << "[STEP 5/5] Enqueuing payload to Deep Space Optical Communications (DSOC) laser terminal..." << std::endl;
+    std::cout << "[PASO 5/5] Encolando paquete en terminal láser de Comunicaciones Ópticas de Espacio Profundo (DSOC)..." << std::endl;
 
     SomaTransmissionRecord record;
     record.incident_timestamp = RidgePayload::current_iso8601();
@@ -166,14 +166,14 @@ void SomaWatchdog::execute_soma_emergency_protocol(const std::string& trigger_re
     // 6. Prominent Log: [SOMA DSOC BURST TRANSMITTED]
     std::cout << "--------------------------------------------------------------------------------" << std::endl;
     std::cout << "  [SOMA DSOC BURST TRANSMITTED]" << std::endl;
-    std::cout << "  TIMESTAMP:       " << record.incident_timestamp << std::endl;
-    std::cout << "  CREW ID:         " << record.crew_id << std::endl;
-    std::cout << "  TRIGGER REASON:  " << record.trigger_reason << std::endl;
-    std::cout << "  TELEMETRY SAMPLES: " << record.historical_samples_count << " packets (1000 Hz burst archive)" << std::endl;
-    std::cout << "  DATA SIZE:       " << record.raw_payload_bytes << " B raw -> " << record.compressed_payload_bytes << " B (Zstd " << record.compression_ratio << "x)" << std::endl;
-    std::cout << "  SECURITY CIPHER: AES-256-GCM (Nonce: " << record.iv_nonce_hex << " | Tag: " << record.auth_tag_hex << ")" << std::endl;
-    std::cout << "  TRANSMITTER:     DSOC 1550nm Uplink Laser -> " << record.target_ground_station << std::endl;
-    std::cout << "  ONE-WAY DELAY:   " << record.light_delay_minutes << " min light-speed delay to Earth" << std::endl;
+    std::cout << "  HORA UTC:            " << record.incident_timestamp << std::endl;
+    std::cout << "  TRIPULANTE:          " << record.crew_id << std::endl;
+    std::cout << "  MOTIVO DE DISPARO:   " << record.trigger_reason << std::endl;
+    std::cout << "  MUESTRAS TELEMETRÍA: " << record.historical_samples_count << " paquetes (archivo en ráfaga a 1000 Hz)" << std::endl;
+    std::cout << "  TAMAÑO DE DATOS:     " << record.raw_payload_bytes << " B sin comprimir -> " << record.compressed_payload_bytes << " B (Zstd " << record.compression_ratio << "x)" << std::endl;
+    std::cout << "  CIFRADO DE SEGURIDAD: AES-256-GCM (Nonce: " << record.iv_nonce_hex << " | Tag: " << record.auth_tag_hex << ")" << std::endl;
+    std::cout << "  TRANSMISOR:          Láser DSOC 1550nm -> " << record.target_ground_station << std::endl;
+    std::cout << "  RETARDO LUMÍNICO:    " << record.light_delay_minutes << " min de retardo a la velocidad de la luz a la Tierra" << std::endl;
     std::cout << "================================================================================\n" << std::endl;
 
     // 7. Broadcast SOMA event JSON over WebSocket to frontend
