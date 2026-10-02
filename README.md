@@ -197,39 +197,77 @@ f:\VitalGrid\
         ├── audio_synth.js      # Procedural Web Audio API sound synthesizer
         └── app.js              # WebSocket telemetry handler, live ECG & anomaly pad
 ```
+---
+
+## 6. 🚀 Guía Rápida para el Equipo (Cómo Correr el Proyecto en 2 Minutos)
+
+¡Bienvenido al equipo de **VitalGrid**! Sigue estos pasos para clonar y levantar el sistema de monitoreo biomédico en tu computadora:
+
+### Paso 1: Clonar el Repositorio
+Abre tu terminal (PowerShell, CMD, Git Bash o terminal de Linux/macOS) y clona el proyecto:
+```bash
+git clone https://github.com/86developer/NASA-Spaceapps-2026.git
+cd NASA-Spaceapps-2026
+```
 
 ---
 
-## 6. Compilation & Execution Guide
+### Paso 2: Levantar el Proyecto
 
-### Option 1: 1-Click Launch (Windows Batch)
-Simply double-click or run from PowerShell / CMD:
-```bat
+#### 🪟 En Windows (El método más fácil - 1 Clic):
+Simplemente ejecuta el script automatizado:
+```cmd
 .\run.bat
 ```
-*This script verifies the compiler, builds `vitalgrid_daemon.exe`, launches the Crew Dragon UI in your default browser, and starts the telemetry daemon on port 9002.*
+> **¿Qué hace `run.bat` automáticamente?**
+> 1. Detecta tu compilador `g++` (incluso si está instalado vía Scoop o MinGW).
+> 2. Compila el demonio `vitalgrid_daemon.exe` optimizado con `-O3`.
+> 3. Abre automáticamente la interfaz **Crew Dragon** (`web/index.html`) en tu navegador predeterminado.
+> 4. Inicia el servidor WebSocket en segundo plano en `ws://127.0.0.1:9002`.
 
----
-
-### Option 2: Direct g++ CLI (Fastest, zero config)
-With MinGW / GCC installed on Windows or Linux:
-
+#### 🐧 En Linux / macOS / WSL:
+Compila con `g++` (o `clang++`) y levanta el demonio:
 ```bash
-# Windows (links WinSock2)
-g++ -std=c++17 -O3 -Wall -Wextra src/main.cpp src/engine/flight_surgeon.cpp src/soma/soma_watchdog.cpp src/network/websocket_server.cpp -lws2_32 -o vitalgrid_daemon.exe
-
-# Linux / macOS (links POSIX threads)
+# Compilar:
 g++ -std=c++17 -O3 -Wall -Wextra src/main.cpp src/engine/flight_surgeon.cpp src/soma/soma_watchdog.cpp src/network/websocket_server.cpp -pthread -o vitalgrid_daemon
-```
 
-To run:
-```bash
-./vitalgrid_daemon.exe 9002
+# Iniciar backend:
+./vitalgrid_daemon 9002
 ```
+Luego abre el archivo `web/index.html` en tu navegador favorito (Chrome, Firefox, Edge, Safari).
 
 ---
 
-### Option 3: CMake Build
+### 🛠️ ¿No tienes compilador C++ instalado?
+- **En Windows (Recomendado vía Scoop):**
+  ```powershell
+  scoop install gcc
+  ```
+- **En Ubuntu / Debian:**
+  ```bash
+  sudo apt update && sudo apt install -y build-essential
+  ```
+- **En macOS:**
+  ```bash
+  xcode-select --install
+  ```
+
+---
+
+### Paso 3: Interactuar con el Dashboard
+Una vez abierto el dashboard:
+1. Verás el estado **"TELEMETRY ONLINE"** en verde en la barra superior.
+2. El ECG cardíaco comenzará a dibujar en tiempo real a 1000 Hz sincronizado con la frecuencia cardíaca.
+3. En la columna derecha encontrarás el **SIMULATION COCKPIT (ANOMALY INJECTION PAD)**:
+   - Haz clic en **`🚨 TRIGGER SOS BUTTON`**, **`💥 DEPRESSURIZE CABIN`** o **`💔 ASYSTOLE / COLLAPSE`** para activar el protocolo de emergencia **SOMA** ("Ciencia sobre Supervivencia"), ver el empaquetado forense Zstd, el cifrado militar AES-256-GCM y la transmisión láser DSOC a 1550nm hacia la Tierra.
+   - Haz clic en **`🫁 INJECT HYPOXIA`**, **`💨 INJECT ppCO2`** o **`👁️ INJECT SANS`** para ver cómo la IA del **Flight Surgeon** emite directivas tácticas inmediatas.
+   - Haz clic en **`✨ RESTORE ALL TO NOMINAL BASELINE`** para reiniciar todos los parámetros al estado de salud ideal.
+
+---
+
+## 7. Opciones Avanzadas de Compilación (CMake / Make)
+
+### Con CMake:
 ```bash
 mkdir build
 cd build
@@ -238,9 +276,7 @@ cmake --build . --config Release
 ./vitalgrid_daemon 9002
 ```
 
----
-
-### Option 4: Make
+### Con Makefile:
 ```bash
 make
 ./vitalgrid_daemon.exe
@@ -248,23 +284,10 @@ make
 
 ---
 
-## 7. Connecting and Interacting with the Crew Dragon UI
+## 8. Ejecución de Pruebas de Integración (Opcional)
+Para verificar la conexión de telemetría y el disparo de SOMA desde scripts automatizados:
+```bash
+python tests/test_stream.py
+python tests/test_soma.py
+```
 
-1. Open `web/index.html` in any modern web browser (Chrome, Edge, Firefox, Brave, Safari).
-2. The UI will automatically connect to `ws://127.0.0.1:9002`.
-3. You will immediately see:
-   - **Commander Bio & MET**: Dr. Marcus Vance (`CMD-01`) with ticking mission clock.
-   - **Health Score Ring**: Real-time 0-100 gauge reflecting physiological condition.
-   - **Live ECG Waveform**: 1000 Hz real-time cardiac trace on HTML5 canvas.
-   - **RIDGE 5 Hazards Matrix**: Live readings for Radiation, Isolation, Distance, Gravity (Cardio/SANS), and Environment (ppCO2, SpO2, Temp).
-   - **Flight Surgeon AI**: Dynamic tactical directives for detected breaches.
-   - **Anomaly Injection Cockpit**: Interactive buttons to simulate emergencies in real time:
-     - `🚨 TRIGGER SOS BUTTON`: Engages crew panic alert and trips SOMA.
-     - `💥 DEPRESSURIZE CABIN`: Simulates structural pressure breach and trips SOMA.
-     - `💔 ASYSTOLE / COLLAPSE`: Simulates vital sign cessation, flatlines ECG canvas, and trips SOMA.
-     - `🫁 INJECT HYPOXIA (<95%)`: Triggers hypoxemia clinical directive and O2 mask protocol.
-     - `💨 INJECT ppCO2 (>3.0)`: Triggers hypercapnia alert and CDRA scrubber cycling.
-     - `👁️ INJECT SANS (>5.8mm)`: Triggers optic nerve ICP alert and LBNP countermeasure.
-     - `☢️ SOLAR FLARE (>250mSv)`: Triggers Acute Radiation Syndrome storm shelter protocol.
-     - `🌡️ SPACE FEVER (>38.5°C)`: Triggers space pyrexia cooling garment directive.
-     - `✨ RESTORE ALL TO NOMINAL`: Resets all physiological markers and clears alarms.
