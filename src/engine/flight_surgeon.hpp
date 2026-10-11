@@ -2,6 +2,7 @@
 
 #include "../models/ridge_payload.hpp"
 #include "../models/alert_payload.hpp"
+#include <string>
 #include <vector>
 
 namespace vitalgrid {
@@ -26,7 +27,54 @@ public:
      */
     int compute_health_score(const RidgePayload& payload) const;
 
-    // Hardcoded Clinical Thresholds (NASA Space Flight Standards)
+    /**
+     * @brief Carga umbrales y penalizaciones desde config/clinical_thresholds.json.
+     * Un solo agente (médico de vuelo) usa esa tabla para los cinco pilares.
+     * Si el archivo no está o no se puede leer, quedan los valores compilados.
+     */
+    bool load_thresholds(const std::string& path);
+
+    struct Limits {
+        double acute_mSv = 250.0;
+        double acute_mid_mSv = 50.0;
+        double career_mSv = 600.0;
+        double bp_sys = 155.0;
+        double bp_dia = 95.0;
+        double hr_bpm = 110.0;
+        double onsd_mm = 5.8;
+        double onsd_soft_mm = 5.0;
+        double ppco2 = 3.0;
+        double ppco2_soft = 2.0;
+        double spo2 = 95.0;
+        double temp_c = 38.5;
+        double sleep_h = 6.0;
+        double hrv_pct = 25.0;
+        double blink_per_min = 8.0;
+        double microsleep = 1.0;
+        double pvt_ms = 350.0;
+
+        double pen_sos = 35.0;
+        double pen_depress = 40.0;
+        double pen_acute = 40.0;
+        double pen_acute_mid = 15.0;
+        double pen_career = 25.0;
+        double pen_bp = 15.0;
+        double pen_hr = 15.0;
+        double pen_onsd = 20.0;
+        double pen_onsd_soft = 5.0;
+        double pen_ppco2 = 20.0;
+        double pen_ppco2_soft = 5.0;
+        double pen_spo2 = 25.0;
+        double pen_temp = 20.0;
+        double pen_sleep = 8.0;
+        double pen_hrv = 8.0;
+        double pen_blink = 8.0;
+        double pen_microsleep = 15.0;
+        double pen_pvt = 5.0;
+    };
+
+    Limits limits_;
+
     static constexpr double THRESHOLD_ACUTE_RAD_CRITICAL_MSV = 250.0;
     static constexpr double THRESHOLD_CAREER_RAD_CRITICAL_MSV = 600.0;
     static constexpr int    THRESHOLD_BP_SYS_CRITICAL = 155;
