@@ -147,6 +147,31 @@ std::vector<ClinicalAlert> FlightSurgeonAI::evaluate(const RidgePayload& payload
         alerts.push_back(alert);
     }
 
+    // 5. WARNING: Severe blink rate drop (< 8 / min) or microsleep events detected (>= 1)
+    if (i.blink_rate_per_min < THRESHOLD_BLINK_RATE_WARN_PER_MIN) {
+        ClinicalAlert alert;
+        alert.status = AlertSeverity::WARNING;
+        alert.trigger_metric = "blink_rate_per_min";
+        alert.trigger_value = std::to_string(i.blink_rate_per_min) + " parp/min";
+        alert.threshold_limit = "< " + std::to_string(THRESHOLD_BLINK_RATE_WARN_PER_MIN) + " parp/min";
+        alert.diagnosis = "FATIGA OCULAR SEVERA / HIPOVIGILANCIA POR CAÍDA DE FRECUENCIA DE PARPADEO";
+        alert.tactical_action = "Activar protocolo de descanso visual 20-20-20. Suministrar gotas oftálmicas lubricantes en cabina. Suspender tareas robóticas de precisión y evaluar nivel de fatiga neurocognitiva.";
+        alert.timestamp = ts;
+        alerts.push_back(alert);
+    }
+
+    if (i.microsleep_events >= THRESHOLD_MICROSLEEP_WARN_COUNT) {
+        ClinicalAlert alert;
+        alert.status = AlertSeverity::WARNING;
+        alert.trigger_metric = "microsleep_events";
+        alert.trigger_value = std::to_string(i.microsleep_events) + " eventos";
+        alert.threshold_limit = ">= " + std::to_string(THRESHOLD_MICROSLEEP_WARN_COUNT);
+        alert.diagnosis = "EVENTO DE MICROSUEÑO DETECTADO - PÉRDIDA TRANSITORIA DE CONCIENCIA";
+        alert.tactical_action = "EMITIR ALERTA AUDITIVA EN CABINA (Chime de atención inmediata). Notificar al comandante de misión. Relevar inmediatamente al astronauta de controles de vuelo activos.";
+        alert.timestamp = ts;
+        alerts.push_back(alert);
+    }
+
     return alerts;
 }
 
@@ -184,6 +209,8 @@ int FlightSurgeonAI::compute_health_score(const RidgePayload& payload) const {
     if (i.sleep_hours_last_24h < 6.0) score -= 8.0;
     if (i.hrv_rmssd_drop_pct > 25.0) score -= 8.0;
     if (i.pvt_reaction_time_ms > 350) score -= 5.0;
+    if (i.blink_rate_per_min < 8) score -= 8.0;
+    if (i.microsleep_events > 0) score -= 15.0;
 
     score = std::clamp(score, 0.0, 100.0);
     return static_cast<int>(std::round(score));

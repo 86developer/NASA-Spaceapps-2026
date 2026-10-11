@@ -38,6 +38,8 @@ public:
     static constexpr double THRESHOLD_BODY_TEMP_CRITICAL_C = 38.5;
     static constexpr double THRESHOLD_SLEEP_WARN_HOURS = 6.0;
     static constexpr double THRESHOLD_HRV_DROP_WARN_PCT = 25.0;
+    static constexpr int    THRESHOLD_BLINK_RATE_WARN_PER_MIN = 8; // Severe drop in spontaneous blink rate (< 8 blinks/min)
+    static constexpr int    THRESHOLD_MICROSLEEP_WARN_COUNT = 1;   // Occurrence of >= 1 microsleep event (>500ms)
 };
 
 } // namespace vitalgrid

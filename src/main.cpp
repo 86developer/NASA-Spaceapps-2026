@@ -82,6 +82,9 @@ int main(int argc, char* argv[]) {
     state.telemetry_ridge.I_isolation.sleep_hours_last_24h = 5.8;
     state.telemetry_ridge.I_isolation.hrv_rmssd_drop_pct = 18.5;
     state.telemetry_ridge.I_isolation.pvt_reaction_time_ms = 280;
+    state.telemetry_ridge.I_isolation.blink_rate_per_min = 18;
+    state.telemetry_ridge.I_isolation.microsleep_events = 0;
+    state.telemetry_ridge.I_isolation.perclos_pct = 0.0;
 
     state.telemetry_ridge.D_distance.comm_delay_oneway_min = 20.5;
     state.telemetry_ridge.D_distance.med_supply_days_remaining = 412;
@@ -96,10 +99,50 @@ int main(int argc, char* argv[]) {
     state.telemetry_ridge.E_environment.spo2_pct = 94;
     state.telemetry_ridge.E_environment.body_temperature_c = 37.9;
 
-    // Remote Command Handling from UI
+    // Remote Command Handling & Peripheral Sensor Ingestion
     ws_server.set_message_callback([&](socket_t /*client*/, const std::string& msg) {
         std::lock_guard<std::mutex> lock(state_mutex);
         std::cout << "[REMOTE INGESTION COMMAND] Received: " << msg << std::endl;
+
+        // Peripheral JSON Sensor Telemetry Ingestion (e.g. MediaPipe Camera Eye Tracker)
+        if (msg.find("metric") != std::string::npos) {
+            auto extract_json_val = [](const std::string& str, const std::string& key) -> std::string {
+                std::string pattern = "\"" + key + "\"";
+                size_t pos = str.find(pattern);
+                if (pos == std::string::npos) return "";
+                pos = str.find(':', pos + pattern.size());
+                if (pos == std::string::npos) return "";
+                pos++;
+                while (pos < str.size() && (str[pos] == ' ' || str[pos] == '\"')) pos++;
+                size_t end = pos;
+                while (end < str.size() && str[end] != ',' && str[end] != '}' && str[end] != '\"' && str[end] != ' ' && str[end] != '\r' && str[end] != '\n') end++;
+                return str.substr(pos, end - pos);
+            };
+
+            std::string metric = extract_json_val(msg, "metric");
+            std::string val_str = extract_json_val(msg, "value");
+
+            if (!metric.empty() && !val_str.empty()) {
+                try {
+                    if (metric == "blink_rate") {
+                        state.telemetry_ridge.I_isolation.blink_rate_per_min = std::stoi(val_str);
+                        std::cout << "[PERIPHERAL INGESTION] Isolation.blink_rate_per_min updated to " 
+                                  << state.telemetry_ridge.I_isolation.blink_rate_per_min << " parp/min" << std::endl;
+                    } else if (metric == "microsleep") {
+                        state.telemetry_ridge.I_isolation.microsleep_events = std::stoi(val_str);
+                        std::cout << "[PERIPHERAL INGESTION] Isolation.microsleep_events updated to " 
+                                  << state.telemetry_ridge.I_isolation.microsleep_events << std::endl;
+                    } else if (metric == "perclos") {
+                        state.telemetry_ridge.I_isolation.perclos_pct = std::stod(val_str);
+                        std::cout << "[PERIPHERAL INGESTION] Isolation.perclos_pct updated to " 
+                                  << state.telemetry_ridge.I_isolation.perclos_pct << "%" << std::endl;
+                    }
+                } catch (const std::exception& e) {
+                    std::cerr << "[PERIPHERAL INGESTION ERROR] Failed to parse value: " << e.what() << std::endl;
+                }
+            }
+            return;
+        }
 
         if (msg == "TRIGGER_SOS") {
             state.survival_status.sos_panic_button_active = true;
@@ -129,6 +172,9 @@ int main(int argc, char* argv[]) {
         } else if (msg == "INJECT_FATIGUE") {
             state.telemetry_ridge.I_isolation.sleep_hours_last_24h = 4.2;
             state.telemetry_ridge.I_isolation.hrv_rmssd_drop_pct = 31.0;
+            state.telemetry_ridge.I_isolation.blink_rate_per_min = 5;
+            state.telemetry_ridge.I_isolation.microsleep_events = 2;
+            state.telemetry_ridge.I_isolation.perclos_pct = 28.5;
         } else if (msg == "RESET_NOMINAL") {
             state.survival_status.vital_signs_present = true;
             state.survival_status.sos_panic_button_active = false;
@@ -138,6 +184,9 @@ int main(int argc, char* argv[]) {
             state.telemetry_ridge.I_isolation.sleep_hours_last_24h = 7.2;
             state.telemetry_ridge.I_isolation.hrv_rmssd_drop_pct = 12.0;
             state.telemetry_ridge.I_isolation.pvt_reaction_time_ms = 240;
+            state.telemetry_ridge.I_isolation.blink_rate_per_min = 18;
+            state.telemetry_ridge.I_isolation.microsleep_events = 0;
+            state.telemetry_ridge.I_isolation.perclos_pct = 0.0;
             state.telemetry_ridge.G_gravity.heart_rate_bpm = 72;
             state.telemetry_ridge.G_gravity.blood_pressure_sys = 120;
             state.telemetry_ridge.G_gravity.blood_pressure_dia = 78;

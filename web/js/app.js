@@ -285,6 +285,8 @@ document.addEventListener('DOMContentLoaded', () => {
         setMetric('val_sleep_hours', i.sleep_hours_last_24h.toFixed(1), false, i.sleep_hours_last_24h < 6.0);
         setMetric('val_hrv_drop', i.hrv_rmssd_drop_pct.toFixed(1), false, i.hrv_rmssd_drop_pct > 25.0);
         setMetric('val_pvt_ms', i.pvt_reaction_time_ms, false, i.pvt_reaction_time_ms > 350);
+        setMetric('val_blink_rate', i.blink_rate_per_min ?? 18, false, (i.blink_rate_per_min ?? 18) < 8);
+        setMetric('val_microsleep', i.microsleep_events ?? 0, (i.microsleep_events ?? 0) >= 1, false);
 
         // D - Distancia
         setMetric('val_comm_delay', d.comm_delay_oneway_min.toFixed(1), false);

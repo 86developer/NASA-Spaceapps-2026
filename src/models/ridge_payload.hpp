@@ -52,6 +52,9 @@ struct IsolationTelemetry {
     double sleep_hours_last_24h = 5.8;    // Sleep duration
     double hrv_rmssd_drop_pct = 18.5;     // Autonomic nervous system stress index
     int pvt_reaction_time_ms = 280;       // Psychomotor Vigilance Task (PVT) ms
+    int blink_rate_per_min = 18;          // Spontaneous blink rate per minute (eye fatigue indicator)
+    int microsleep_events = 0;           // Cumulative microsleep episodes (>500ms involuntary closure)
+    double perclos_pct = 0.0;            // Percentage of Eye Closure (PERCLOS) over moving window
 
     std::string to_json() const {
         std::ostringstream ss;
@@ -59,7 +62,10 @@ struct IsolationTelemetry {
         ss << "{"
            << "\"sleep_hours_last_24h\":" << sleep_hours_last_24h << ","
            << "\"hrv_rmssd_drop_pct\":" << hrv_rmssd_drop_pct << ","
-           << "\"pvt_reaction_time_ms\":" << pvt_reaction_time_ms
+           << "\"pvt_reaction_time_ms\":" << pvt_reaction_time_ms << ","
+           << "\"blink_rate_per_min\":" << blink_rate_per_min << ","
+           << "\"microsleep_events\":" << microsleep_events << ","
+           << "\"perclos_pct\":" << perclos_pct
            << "}";
         return ss.str();
     }

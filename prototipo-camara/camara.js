@@ -16,7 +16,9 @@ const CFG = {
   PARPADEO_MAX_MS:    400,    // ¿cuánto dura como máximo un parpadeo normal?
   MICROSUENO_MIN_MS:  500,    // ¿desde qué duración es microsueño?
   VENTANA_PERCLOS_MS: 60000,  // ¿sobre cuántos minutos se promedia PERCLOS?
-  FACTOR_CALIBRACION: 0.60    // umbral = 60 % de la apertura basal propia
+  FACTOR_CALIBRACION: 0.60,   // umbral = 60 % de la apertura basal propia
+  TARGET_FPS:         15,     // Limitador de cuadros (throttling) para no saturar CPU/GPU
+  WS_URL:             "ws://127.0.0.1:9002" // Servidor demonio de telemetría VitalGrid
 };
 // ===========================================================================
 
@@ -33,6 +35,44 @@ const curva = $("curva"), cctx = curva.getContext("2d");
 let landmarker = null;
 let corriendo = false;
 let ultimoTs = -1;
+let ultimoProcesado = 0;
+
+// --- Conexión WebSocket al Demonio C++ de VitalGrid ---
+let ws = null;
+let ultimoEnvioTelemetria = 0;
+
+function conectarWebSocket() {
+  try {
+    ws = new WebSocket(CFG.WS_URL);
+    ws.onopen = () => {
+      console.log("[PERIPHERAL EYE TRACKER] Conectado a VitalGrid Daemon en", CFG.WS_URL);
+      const el = $("v-ws");
+      if (el) {
+        el.textContent = "ONLINE (CONECTADO)";
+        el.style.color = "var(--ok)";
+      }
+    };
+    ws.onclose = () => {
+      const el = $("v-ws");
+      if (el) {
+        el.textContent = "RECONECTANDO...";
+        el.style.color = "var(--warn)";
+      }
+      setTimeout(conectarWebSocket, 2000);
+    };
+    ws.onerror = () => {
+      ws.close();
+    };
+  } catch (e) {
+    setTimeout(conectarWebSocket, 2000);
+  }
+}
+
+function enviarMetrica(metric, value) {
+  if (ws && ws.readyState === WebSocket.OPEN) {
+    ws.send(JSON.stringify({ metric, value }));
+  }
+}
 
 // --- estado de medición ----------------------------------------------------
 let umbral = CFG.UMBRAL_CERRADO;
@@ -101,8 +141,11 @@ async function encender() {
 function bucle() {
   if (!corriendo) return;
   const ahora = performance.now();
+  const intervaloMs = 1000 / CFG.TARGET_FPS;
 
-  if (video.currentTime !== ultimoTs) {
+  // Throttling: ejecutar inferencia a máximo 15 FPS para reducir consumo térmico/CPU
+  if ((ahora - ultimoProcesado >= intervaloMs) && video.currentTime !== ultimoTs) {
+    ultimoProcesado = ahora;
     ultimoTs = video.currentTime;
     const res = landmarker.detectForVideo(video, ahora);
 
@@ -157,6 +200,8 @@ function procesar(e, t) {
     } else if (dur >= CFG.MICROSUENO_MIN_MS) {
       microsuenos++;                           // U ancha
       $("v-micro").textContent = microsuenos;
+      // Ingestión de telemetría de evento crítico: microsueño detectado
+      enviarMetrica("microsleep", microsuenos);
     }
     // entre ambos umbrales queda sin clasificar: preguntarle al oftalmólogo
   }
@@ -174,6 +219,14 @@ function procesar(e, t) {
 
   historia.push(e);
   if (historia.length > 300) historia.shift();
+
+  // Enviar telemetría periférica periódica a 1 Hz hacia VitalGrid Daemon (ws://127.0.0.1:9002)
+  if (t - ultimoEnvioTelemetria >= 1000) {
+    ultimoEnvioTelemetria = t;
+    enviarMetrica("blink_rate", parpadeos.length);
+    enviarMetrica("microsleep", microsuenos);
+    enviarMetrica("perclos", Number((perclos * 100).toFixed(1)));
+  }
 
   // pantalla
   $("v-ear").textContent = e.toFixed(3);
@@ -200,9 +253,15 @@ function dibujarPuntos(pts) {
   }
 }
 
+let anchoCurvaPrevio = 0;
 function dibujarCurva() {
-  const W = curva.width = curva.clientWidth;
-  const H = curva.height = 150;
+  const W = curva.clientWidth;
+  if (W !== anchoCurvaPrevio) {
+    curva.width = W;
+    curva.height = 150;
+    anchoCurvaPrevio = W;
+  }
+  const H = 150;
   cctx.clearRect(0, 0, W, H);
   const MAX = 0.45;
   const y = v => H - (v / MAX) * H;
@@ -237,4 +296,10 @@ $("btn-reset").addEventListener("click", () => {
   $("v-micro").textContent = "0";
   $("v-dur").textContent = "—";
   $("log").textContent = "Conteo reiniciado.";
+  enviarMetrica("blink_rate", 0);
+  enviarMetrica("microsleep", 0);
+  enviarMetrica("perclos", 0);
 });
+
+// Inicializar enlace de comunicación con el daemon en background
+conectarWebSocket();

@@ -117,6 +117,8 @@ The C++ `FlightSurgeonAI` engine evaluates telemetry against strict aerospace bi
 | **CRITICAL** | `body_temperature_c` | `> 38.5 °C` | Space Pyrexia / Thermoregulatory Collapse or Sepsis | Engage Liquid Cooling Garment (LCVG) active chiller loop. Infuse IV Paracetamol 1000mg. Run blood Bio-Analyzer cartridge. |
 | **WARNING** | `sleep_hours_last_24h` | `< 6.0 hours` | Chronic Sleep Debt & Cognitive Fatigue | Prescribe mandatory 60-min restorative rest. Shift ambient lighting to 480nm-depleted warm circadian spectrum. Hold robotics tasks. |
 | **WARNING** | `hrv_rmssd_drop_pct` | `> 25.0%` | Autonomic Sympathetic Exhaustion | Guided biofeedback resonance breathing (0.1 Hz pacing) for 15 min. Reduce sensory workload. Assess cortisol biomarkers. |
+| **WARNING** | `blink_rate_per_min` | `< 8 blinks/min` | Severe Ocular Fatigue / Hypovigilance | Activate 20-20-20 visual rest protocol. Dispense lubricating eye drops. Re-evaluate alertness prior to critical operations. |
+| **WARNING** | `microsleep_events` | `>= 1 event` | Microsleep Episode Detected / Loss of Consciousness | Cockpit audible chime. Alert Mission Commander. Immediate relief from active flight controls. |
 
 When any threshold is breached, the engine generates and broadcasts an actionable sub-JSON alert:
 
