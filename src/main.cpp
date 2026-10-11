@@ -44,8 +44,11 @@ int main(int argc, char* argv[]) {
     // 1. Initialize High-Rate Telemetry Ring Buffer
     CircularTelemetryBuffer telemetry_buffer(2048);
 
-    // 2. Initialize Flight Surgeon AI
+    // 2. Initialize Flight Surgeon AI (un solo agente, umbrales en JSON)
     FlightSurgeonAI flight_surgeon;
+    if (!flight_surgeon.load_thresholds("config/clinical_thresholds.json")) {
+        std::cout << "[FLIGHT SURGEON] Usando umbrales compilados." << std::endl;
+    }
 
     // 3. Initialize SOMA Watchdog Thread
     SomaWatchdog soma_watchdog(telemetry_buffer);
