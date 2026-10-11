@@ -976,6 +976,172 @@ body::before {
   50% { box-shadow: 0 0 16px rgba(255, 0, 85, 0.4); }
 }
 
+/* Edema facial vs día 1 */
+.edema-note,
+.edema-status {
+  font-size: 0.74rem;
+  line-height: 1.4;
+  color: var(--text-secondary);
+  margin-bottom: 10px;
+}
+
+.edema-stage {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  background: #04070a;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  margin-bottom: 10px;
+}
+
+.edema-stage video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: scaleX(-1);
+}
+
+.edema-idle {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  letter-spacing: 1px;
+  color: var(--text-muted);
+  background: rgba(4, 7, 10, 0.72);
+}
+
+.edema-idle[hidden] {
+  display: none;
+}
+
+.edema-delta {
+  font-family: var(--font-display);
+  font-size: 2rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  line-height: 1;
+  color: var(--text-primary);
+}
+
+.edema-delta.nominal { color: var(--bio-green); }
+.edema-delta.warn { color: var(--warn-amber); }
+.edema-delta.crit { color: var(--crit-crimson); }
+
+.edema-delta-label {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  color: var(--text-muted);
+  margin: 4px 0 10px;
+}
+
+.edema-metrics {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+  margin-bottom: 8px;
+}
+
+.edema-metrics div {
+  background: rgba(0, 0, 0, 0.28);
+  border-radius: var(--radius-sm);
+  padding: 6px 8px;
+}
+
+.edema-metrics span {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  color: var(--text-muted);
+  letter-spacing: 0.4px;
+}
+
+.edema-metrics strong {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  color: var(--hud-cyan);
+}
+
+.edema-meta {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  color: var(--text-secondary);
+  margin-bottom: 8px;
+}
+
+.edema-chart {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 3px;
+  height: 52px;
+  margin-bottom: 8px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.edema-chart[hidden] {
+  display: none;
+}
+
+.edema-bar {
+  width: 7px;
+  border-radius: 2px;
+  background: var(--bio-green);
+  align-self: flex-end;
+  margin-bottom: 26px;
+}
+
+.edema-bar.warn { background: var(--warn-amber); }
+.edema-bar.crit { background: var(--crit-crimson); }
+
+.edema-bar.down {
+  align-self: flex-start;
+  margin-bottom: 0;
+  margin-top: 26px;
+}
+
+.edema-history {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 8px;
+}
+
+.edema-history-row {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  color: var(--text-secondary);
+}
+
+.edema-history-row strong.nominal { color: var(--bio-green); }
+.edema-history-row strong.warn { color: var(--warn-amber); }
+.edema-history-row strong.crit { color: var(--crit-crimson); }
+
+.edema-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.edema-actions .edema-reset {
+  grid-column: span 2;
+}
+
+.edema-actions .sim-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
 /* Custom Scrollbars */
 ::-webkit-scrollbar {
   width: 6px;
