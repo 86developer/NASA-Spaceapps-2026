@@ -390,7 +390,38 @@
 
         <!-- COLUMNA DERECHA: Directivas Clínicas de la IA Médico de Vuelo y Simulación Interactiva -->
         <div class="cockpit-col right-col">
-            
+
+            <div class="glass-panel" id="edemaPanel">
+                <div class="panel-header">
+                    <span class="panel-title">EDEMA FACIAL vs DÍA 1</span>
+                    <span class="panel-badge">CÁMARA LOCAL</span>
+                </div>
+                <p class="edema-note">Cambio geométrico contra la primera captura. No es un diagnóstico. El video se descarta al instante y no sale de esta máquina.</p>
+                <div class="edema-stage">
+                    <video id="edemaVideo" playsinline autoplay muted></video>
+                    <div id="edemaIdle" class="edema-idle">Cámara apagada</div>
+                </div>
+                <div id="edemaDelta" class="edema-delta">—</div>
+                <div id="edemaDeltaLabel" class="edema-delta-label">Sin línea base</div>
+                <div class="edema-metrics">
+                    <div><span>Pómulos</span><strong id="edemaCheek">—</strong></div>
+                    <div><span>Mandíbula</span><strong id="edemaJaw">—</strong></div>
+                    <div><span>Ancho / alto</span><strong id="edemaRound">—</strong></div>
+                </div>
+                <div class="edema-meta">
+                    <span id="edemaBaselineDate">Día 1: sin fijar</span>
+                    <span id="edemaDays"></span>
+                </div>
+                <div id="edemaChart" class="edema-chart" hidden></div>
+                <div id="edemaHistory" class="edema-history"></div>
+                <p id="edemaStatus" class="edema-status">Activá la cámara y mirá de frente, con el rostro en reposo.</p>
+                <div class="edema-actions">
+                    <button id="edemaCameraBtn" class="sim-btn" type="button">ACTIVAR CÁMARA</button>
+                    <button id="edemaCaptureBtn" class="sim-btn" type="button" disabled>FIJAR DÍA 1</button>
+                    <button id="edemaResetBtn" class="sim-btn edema-reset" type="button">BORRAR DÍA 1</button>
+                </div>
+            </div>
+
             <!-- Directivas de la IA Médico de Vuelo -->
             <div class="glass-panel">
                 <div class="panel-header">
@@ -473,5 +504,7 @@
     <!-- Scripts -->
     <script src="js/audio_synth.js"></script>
     <script src="js/app.js"></script>
+    <script src="js/facial_edema.js"></script>
+    <script src="js/facial_edema_panel.js"></script>
 </body>
 </html>
